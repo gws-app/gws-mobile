@@ -12,6 +12,7 @@ class DetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDetailBinding
     private lateinit var insightViewModel: InsightViewModel
+    private lateinit var detailViewModel: DetailViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,21 +22,13 @@ class DetailActivity : AppCompatActivity() {
         showLoading(true)
 
         val itemId = intent.getIntExtra("ITEM_ID", 0)
-        val type = intent.getStringExtra("TYPE")
+        val type = intent.getStringExtra("TYPE") ?: ""
 
         insightViewModel = ViewModelProvider(this).get(InsightViewModel::class.java)
+        detailViewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
 
-        when (type) {
-            "news" -> {
-                insightViewModel.fetchNewsById(itemId)
-            }
-            "recommendations" -> {
-                insightViewModel.fetchRecommendationById(itemId)
-            }
-        }
-
-        insightViewModel.newsResponse.observe(this, { newsResponse ->
-            newsResponse?.data?.let {
+        detailViewModel.insightData.observe(this, { data ->
+            data?.let {
                 binding.titleTextView.text = it.title
                 binding.descriptionTextView.text = it.description
                 Glide.with(this)
@@ -45,13 +38,35 @@ class DetailActivity : AppCompatActivity() {
             }
         })
 
+        if (detailViewModel.insightData.value == null) {
+            if (type.isNotEmpty()) {
+                when (type) {
+                    "news" -> {
+                        insightViewModel.fetchNewsById(itemId)
+                    }
+                    "recommendations" -> {
+                        insightViewModel.fetchRecommendationById(itemId)
+                    }
+                    else -> {
+                    }
+                }
+            }
+        }
+
+        insightViewModel.newsResponse.observe(this, { newsResponse ->
+            newsResponse?.data?.let {
+                detailViewModel.setInsightData(it.title.toString(), it.description.toString(),
+                    it.image.toString()
+                )
+                showLoading(false)
+            }
+        })
+
         insightViewModel.recommendationResponse.observe(this, { recommendationResponse ->
             recommendationResponse?.data?.let {
-                binding.titleTextView.text = it.title
-                binding.descriptionTextView.text = it.description
-                Glide.with(this)
-                    .load(it.image)
-                    .into(binding.imageView)
+                detailViewModel.setInsightData(it.title.toString(), it.description.toString(),
+                    it.image.toString()
+                )
                 showLoading(false)
             }
         })
