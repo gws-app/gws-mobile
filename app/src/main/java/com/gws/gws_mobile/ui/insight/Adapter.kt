@@ -8,7 +8,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.gws.gws_mobile.R
 
-// ItemAdapter.kt
 class ItemAdapter(private val itemList: List<ItemData>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -17,14 +16,12 @@ class ItemAdapter(private val itemList: List<ItemData>) :
         private const val VIEW_TYPE_NEWS = 1
     }
 
-    // ViewHolder untuk Recommendation dan News (karena layoutnya sama)
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val title: TextView = itemView.findViewById(R.id.title)
         val description: TextView = itemView.findViewById(R.id.description)
         val readMoreButton: Button = itemView.findViewById(R.id.readMore)
     }
 
-    // Menentukan ViewType untuk item
     override fun getItemViewType(position: Int): Int {
         return when (itemList[position]) {
             is ItemData.Recommendation -> VIEW_TYPE_RECOMMENDATION
@@ -32,13 +29,11 @@ class ItemAdapter(private val itemList: List<ItemData>) :
         }
     }
 
-    // Membuat ViewHolder berdasarkan ViewType
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.news_recommendation_card, parent, false)
         return ItemViewHolder(view)
     }
 
-    // Menghubungkan data ke tampilan item
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = itemList[position]
         when (holder) {
