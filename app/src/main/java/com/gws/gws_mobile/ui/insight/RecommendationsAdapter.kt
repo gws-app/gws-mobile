@@ -1,5 +1,6 @@
 package com.gws.gws_mobile.ui.insight
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.gws.gws_mobile.R
 import com.gws.gws_mobile.api.response.RecommendationsItem
+import com.gws.gws_mobile.ui.insight.detail.DetailActivity
 
 class RecommendationsAdapter(private val recommendationsList: List<RecommendationsItem>) :
     RecyclerView.Adapter<RecommendationsAdapter.RecommendationsViewHolder>() {
@@ -27,7 +29,10 @@ class RecommendationsAdapter(private val recommendationsList: List<Recommendatio
         holder.title.text = recommendationItem.title
         holder.description.text = recommendationItem.summary
         holder.readMoreButton.setOnClickListener {
-            // Tindakan saat tombol dibaca lebih lanjut diklik bisa membuka detail
+            val intent = Intent(holder.itemView.context, DetailActivity::class.java)
+            intent.putExtra("ITEM_ID", recommendationItem.id)
+            intent.putExtra("TYPE", "recommendations")
+            holder.itemView.context.startActivity(intent)
         }
     }
 

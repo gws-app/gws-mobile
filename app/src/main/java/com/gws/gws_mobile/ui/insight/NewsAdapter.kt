@@ -1,5 +1,6 @@
 package com.gws.gws_mobile.ui.insight
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.gws.gws_mobile.R
 import com.gws.gws_mobile.api.response.NewsItem
+import com.gws.gws_mobile.ui.insight.detail.DetailActivity
 
 class NewsAdapter(private val newsList: List<NewsItem>) :
     RecyclerView.Adapter<NewsAdapter.NewsViewHolder>() {
@@ -27,7 +29,10 @@ class NewsAdapter(private val newsList: List<NewsItem>) :
         holder.title.text = newsItem.title
         holder.description.text = newsItem.summary
         holder.readMoreButton.setOnClickListener {
-            // Tindakan saat tombol dibaca lebih lanjut diklik bisa membuka detail
+            val intent = Intent(holder.itemView.context, DetailActivity::class.java)
+            intent.putExtra("ITEM_ID", newsItem.id)
+            intent.putExtra("TYPE", "news")
+            holder.itemView.context.startActivity(intent)
         }
     }
 

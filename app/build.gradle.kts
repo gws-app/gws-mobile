@@ -40,6 +40,7 @@ android {
 dependencies {
 
     //noinspection UseTomlInstead
+    implementation("com.github.bumptech.glide:glide:4.16.0")
     implementation("androidx.compose.material3:material3:1.3.1")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("com.github.AAChartModel:AAChartCore:-SNAPSHOT")
@@ -54,6 +55,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.androidx.activity)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

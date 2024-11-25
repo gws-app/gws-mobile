@@ -3,4 +3,6 @@
     <string name="title_home">Home</string>
     <string name="title_insight">Insight</string>
     <string name="title_notifications">Notifications</string>
+    <string name="imageofdetail">ImageofDetail</string>
+    <string name="read_more">Read More</string>
 </resources>
