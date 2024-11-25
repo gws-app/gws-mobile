@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.gws.gws_mobile"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.gws.gws_mobile"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -37,9 +37,11 @@ android {
         viewBinding = true
     }
 }
-
 dependencies {
 
+    implementation("androidx.compose.material3:material3:1.3.1")
+    implementation("androidx.recyclerview:recyclerview:1.3.2")
+    implementation("com.github.AAChartModel:AAChartCore:-SNAPSHOT")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
