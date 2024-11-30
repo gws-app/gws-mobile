@@ -131,7 +131,7 @@ class ChatbotActivity : AppCompatActivity() {
 
         val results = outputFeature0.floatArray.mapIndexed { index, confidence ->
             index to confidence
-        }.filter { it.second >= 0.70f }
+        }.filter { it.second >= 0.40f }
             .sortedByDescending { it.second }
 
         return if (results.isNotEmpty()) {
