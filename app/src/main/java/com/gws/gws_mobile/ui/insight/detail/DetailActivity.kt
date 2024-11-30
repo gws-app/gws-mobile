@@ -1,10 +1,13 @@
 package com.gws.gws_mobile.ui.insight.detail
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.gws.gws_mobile.databinding.ActivityDetailBinding
 import com.gws.gws_mobile.ui.insight.InsightViewModel
 
@@ -29,12 +32,24 @@ class DetailActivity : AppCompatActivity() {
 
         detailViewModel.insightData.observe(this, { data ->
             data?.let {
-                binding.titleTextView.text = it.title
-                binding.descriptionTextView.text = it.description
+                binding.backButton.setOnClickListener{
+                    finish()
+                }
+                binding.title.text = type
+                binding.detailTittle.text = it.title
+                binding.description.text = it.description
                 Glide.with(this)
                     .load(it.image)
-                    .into(binding.imageView)
+                    .apply(RequestOptions().transform(RoundedCorners(20)))
+                    .into(binding.image)
                 showLoading(false)
+
+                binding.shareButton.setOnClickListener{
+                    val shareIntent = Intent(Intent.ACTION_SEND)
+                    shareIntent.type = "text/plain"
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, binding.detailTittle.text)
+                    startActivity(Intent.createChooser(shareIntent, "Share via"))
+                }
             }
         })
 

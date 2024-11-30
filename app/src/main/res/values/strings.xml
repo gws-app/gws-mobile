@@ -5,4 +5,5 @@
     <string name="title_notifications">Notifications</string>
     <string name="imageofdetail">ImageofDetail</string>
     <string name="read_more">Read More</string>
+    <string name="title_chatbot">Chatbot</string>
 </resources>

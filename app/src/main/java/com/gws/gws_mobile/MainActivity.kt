@@ -1,5 +1,6 @@
 package com.gws.gws_mobile
 
+import android.content.Intent
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +9,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.gws.gws_mobile.databinding.ActivityMainBinding
+import com.gws.gws_mobile.ui.chatbot.ChatbotActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,5 +34,11 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        binding.fabChat.setOnClickListener {
+            intent = Intent(this, ChatbotActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 }

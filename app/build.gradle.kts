@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("kotlin-parcelize")
 }
 
 android {
@@ -35,12 +36,15 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        mlModelBinding = true
     }
 }
 dependencies {
 
     //noinspection UseTomlInstead
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
     implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("com.andylibrian.jsastrawi:jsastrawi:0.1")
     implementation("androidx.compose.material3:material3:1.3.1")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
     implementation("com.github.AAChartModel:AAChartCore:-SNAPSHOT")
@@ -56,6 +60,9 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.androidx.activity)
+    implementation(libs.tensorflow.lite.support)
+    implementation(libs.tensorflow.lite.metadata)
+    implementation(libs.tensorflow.lite.gpu)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
