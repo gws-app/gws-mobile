@@ -28,7 +28,8 @@
                 android:layout_height="wrap_content"
                 android:padding="16dp">
 
-                <com.github.AAChartModel.AAChartCore.AAChartCreator.AAChartView
+                <!-- Replacing AAChartView with MPAndroidChart LineChart -->
+                <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/moodChart"
                     android:layout_width="match_parent"
                     android:layout_height="300dp"
