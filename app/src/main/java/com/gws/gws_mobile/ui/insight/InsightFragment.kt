@@ -152,11 +152,11 @@ class InsightFragment : Fragment() {
             valueFormatter = object : ValueFormatter() {
                 override fun getFormattedValue(value: Float): String {
                     return when (value) {
-                        1f -> "😞 Crumble"
-                        2f -> "😔 Low"
-                        3f -> "🙂 Neutral"
-                        4f -> "😊 Bright"
-                        5f -> "😍 Bliss"
+                        1f -> "😞"
+                        2f -> "😔"
+                        3f -> "🙂"
+                        4f -> "😊"
+                        5f -> "😍"
                         else -> ""
                     }
                 }

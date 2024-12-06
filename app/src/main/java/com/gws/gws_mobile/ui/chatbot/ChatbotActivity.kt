@@ -1,8 +1,12 @@
 package com.gws.gws_mobile.ui.chatbot
 
+import android.R
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,6 +34,10 @@ class ChatbotActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityChatbotBinding
 
+    private var detectedTag: String? = null
+    private var currentPatterns: List<String>? = null
+    private var isManualInput: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatbotBinding.inflate(layoutInflater)
@@ -38,38 +46,24 @@ class ChatbotActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this).get(ChatbotViewModel::class.java)
 
-        messageAdapter = MessageAdapter(mutableListOf())
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter = messageAdapter
+        setupRecyclerView()
+        observeViewModel()
 
-        viewModel.messageList.observe(this) { updatedMessageList ->
-            messageAdapter.updateMessages(updatedMessageList)
-            binding.recyclerView.scrollToPosition(updatedMessageList.size - 1)
-        }
-
-        loadModel()
-        loadTrainingData()
-        loadLemmatizer()
+        loadResources()
         loadChatHistory()
 
-        binding.sendIcon.setOnClickListener {
-            val inputText = binding.messageInput.text.toString()
-            if (inputText.isNotEmpty()) {
-                addMessageToViewModel(inputText, Message.SENDER_USER)
-                val response = classify(inputText)
-                addMessageToViewModel(response, Message.SENDER_BOT)
-                binding.messageInput.text.clear()
+        binding.sendIcon.setOnClickListener { handleSendClick() }
+        binding.removeChat.setOnClickListener { clearChatHistory() }
+        binding.imageArrowLeft.setOnClickListener { exitChat() }
+
+        binding.dropdownSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                handleDropdownSelection(position)
             }
-        }
 
-        binding.removeChat.setOnClickListener {
-            viewModel.clearMessages()
-            deleteChatHistory()
-        }
-
-        binding.imageArrowLeft.setOnClickListener {
-            finish()
-            saveChatHistory()
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // No action needed
+            }
         }
     }
 
@@ -79,9 +73,54 @@ class ChatbotActivity : AppCompatActivity() {
         model.close()
     }
 
+    private fun setupRecyclerView() {
+        messageAdapter = MessageAdapter(mutableListOf())
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter = messageAdapter
+    }
+
+    private fun observeViewModel() {
+        viewModel.messageList.observe(this) { updatedMessageList ->
+            messageAdapter.updateMessages(updatedMessageList)
+            binding.recyclerView.scrollToPosition(updatedMessageList.size - 1)
+        }
+    }
+
+    private fun handleSendClick() {
+        val inputText = binding.messageInput.text.toString()
+        if (inputText.isNotEmpty()) {
+            isManualInput = true
+            addMessageToViewModel(inputText, Message.SENDER_USER)
+            val response = classify(inputText)
+            setupDropdown(response)
+            binding.messageInput.text.clear()
+        }
+    }
+
+    private fun handleDropdownSelection(position: Int) {
+        currentPatterns?.let {
+            val selectedPattern = it[position]
+            if (!isManualInput) addMessageToViewModel(selectedPattern, Message.SENDER_USER)
+            val botResponse = getResponseForPattern()
+            addMessageToViewModel(botResponse, Message.SENDER_BOT)
+            isManualInput = false
+        }
+    }
+
+    private fun exitChat() {
+        finish()
+        saveChatHistory()
+    }
+
     private fun addMessageToViewModel(text: String, sender: Int) {
         val message = Message(text, sender)
         viewModel.addMessage(message)
+    }
+
+    private fun loadResources() {
+        loadModel()
+        loadTrainingData()
+        loadLemmatizer()
     }
 
     private fun loadModel() {
@@ -89,9 +128,8 @@ class ChatbotActivity : AppCompatActivity() {
     }
 
     private fun loadTrainingData() {
-        val assetManager = assets
         val trainingDataPath = "training_data.json"
-        val reader = InputStreamReader(assetManager.open(trainingDataPath))
+        val reader = InputStreamReader(assets.open(trainingDataPath))
         val gson = Gson()
         trainingData = gson.fromJson(reader, TrainingData::class.java)
         words = trainingData.words
@@ -99,8 +137,7 @@ class ChatbotActivity : AppCompatActivity() {
     }
 
     private fun loadLemmatizer() {
-        val dictionary = HashSet<String>()
-        dictionary.addAll(words)
+        val dictionary = HashSet(words)
         lemmatizer = DefaultLemmatizer(dictionary)
     }
 
@@ -111,13 +148,7 @@ class ChatbotActivity : AppCompatActivity() {
 
     private fun bow(sentence: String): FloatArray {
         val sentenceWords = cleanUpSentence(sentence)
-        val bag = FloatArray(words.size) { 0f }
-        for (i in words.indices) {
-            if (sentenceWords.contains(words[i])) {
-                bag[i] = 1f
-            }
-        }
-        return bag
+        return FloatArray(words.size) { if (sentenceWords.contains(words[it])) 1f else 0f }
     }
 
     private fun classify(sentence: String): String {
@@ -135,33 +166,48 @@ class ChatbotActivity : AppCompatActivity() {
             .sortedByDescending { it.second }
 
         return if (results.isNotEmpty()) {
-            val predictedClass = classes[results[0].first]
-            getResult(predictedClass)
+            detectedTag = classes[results[0].first]
+            detectedTag ?: "unknown"
         } else {
-            "Sorry, I didn't understand that."
+            "unknown"
         }
     }
 
-    private fun getResult(predictedClass: String): String {
-        val assetManager = assets
+    private fun setupDropdown(tag: String) {
         val dataset = "nlp_dataset_faq.json"
-        val reader = InputStreamReader(assetManager.open(dataset))
+        val reader = InputStreamReader(assets.open(dataset))
         val gson = Gson()
 
         val jsonArray = gson.fromJson(reader, Array<JsonObject>::class.java)
-        val match = jsonArray.find { it.get("tag").asString == predictedClass }
+        val match = jsonArray.find { it.get("tag").asString == tag }
+
+        if (match != null) {
+            val patterns = match.getAsJsonArray("patterns")
+            currentPatterns = patterns.map { it.asString }
+
+            val adapter = ArrayAdapter(this, R.layout.simple_spinner_item, currentPatterns!!)
+            adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
+            binding.dropdownSpinner.adapter = adapter
+            binding.floatingDropdownCard.visibility = View.VISIBLE
+        } else {
+            binding.floatingDropdownCard.visibility = View.GONE
+            addMessageToViewModel("Maaf aku belum mengerti, bisa bicarakan hal lain?", Message.SENDER_BOT)
+        }
+    }
+
+    private fun getResponseForPattern(): String {
+        val dataset = "nlp_dataset_faq.json"
+        val reader = InputStreamReader(assets.open(dataset))
+        val gson = Gson()
+
+        val jsonArray = gson.fromJson(reader, Array<JsonObject>::class.java)
+        val match = jsonArray.find { it.get("tag").asString == detectedTag }
 
         return if (match != null) {
             val responses = match.getAsJsonArray("responses")
-
-            val randomIndex = kotlin.random.Random.nextInt(responses.size())
-            val randomResponse = responses[randomIndex].asString
-
-            Log.d("RandomResponse", randomResponse)
-
-            randomResponse
+            responses.map { it.asString }.random()
         } else {
-            "Tag not found"
+            "Sorry, I don't have an answer for that."
         }
     }
 
@@ -190,6 +236,12 @@ class ChatbotActivity : AppCompatActivity() {
         } catch (e: Exception) {
             Log.e("ChatbotActivity", "Error loading chat history", e)
         }
+    }
+
+    private fun clearChatHistory() {
+        viewModel.clearMessages()
+        deleteChatHistory()
+        binding.floatingDropdownCard.visibility = View.GONE
     }
 
     private fun deleteChatHistory() {
