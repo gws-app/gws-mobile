@@ -6,4 +6,8 @@
     <string name="imageofdetail">ImageofDetail</string>
     <string name="read_more">Read More</string>
     <string name="title_chatbot">Chatbot</string>
+    <string name="clear_search_icon">Clear search icon</string>
+    <string name="notification_icon">Notification icon</string>
+    <string name="search">Search</string>
+    <string name="search_icon">Search icon</string>
 </resources>
