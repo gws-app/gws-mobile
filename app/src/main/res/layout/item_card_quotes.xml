@@ -12,42 +12,38 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Gradient Background -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:cardBackgroundColor="@android:color/white"
-            app:cardCornerRadius="12dp">
-
-
-        </androidx.cardview.widget.CardView>
-
         <!-- TextView Author (e.g., Mulyono) -->
         <TextView
             android:id="@+id/textViewAuthorQuote"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Mulyono"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@android:color/darker_gray"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:gravity="center" />
+            app:layout_constraintWidth_percent="0.8" />
 
         <!-- TextView Quote -->
         <TextView
             android:id="@+id/textViewQuotes"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="The only way to do great work is to love what you do."
-            android:textSize="16sp"
+            android:text="The only way to do great work is to love what you do. Always stay hungry, always stay foolish, and never stop learning."
+            android:textSize="18sp"
             android:textColor="@android:color/black"
+            android:lineSpacingMultiplier="1.3"
+            android:layout_marginBottom="32dp"
+            android:gravity="center"
             app:layout_constraintTop_toBottomOf="@id/textViewAuthorQuote"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:gravity="center" />
+            app:layout_constraintWidth_percent="0.9" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
