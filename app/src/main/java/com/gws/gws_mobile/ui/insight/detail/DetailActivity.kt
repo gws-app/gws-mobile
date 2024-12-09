@@ -47,7 +47,7 @@ class DetailActivity : AppCompatActivity() {
                 binding.shareButton.setOnClickListener{
                     val shareIntent = Intent(Intent.ACTION_SEND)
                     shareIntent.type = "text/plain"
-                    shareIntent.putExtra(Intent.EXTRA_TEXT, binding.detailTittle.text)
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, "${binding.detailTittle.text}\n\n${binding.description.text}")
                     startActivity(Intent.createChooser(shareIntent, "Share via"))
                 }
             }
