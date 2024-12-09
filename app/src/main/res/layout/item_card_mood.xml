@@ -29,7 +29,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Emoji Moods (5 emojis) -->
+        <!-- Emoji Moods (5 emojis as ImageButtons) -->
         <HorizontalScrollView
             android:id="@+id/emoji_scroll"
             android:layout_width="match_parent"
@@ -47,35 +47,54 @@
                 android:gravity="center"
                 android:layout_gravity="center">
 
-                <!-- Example of 5 emojis -->
-                <ImageView
+                <!-- Emoji 1 -->
+                <ImageButton
+                    android:id="@+id/emoji_button_1"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_marginEnd="8dp"
-                    android:src="@drawable/ic_circle_notifications_24dp" />
+                    android:src="@drawable/ic_45_lupbgt"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Mood 1" />
 
-                <ImageView
+                <!-- Emoji 2 -->
+                <ImageButton
+                    android:id="@+id/emoji_button_2"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_marginEnd="8dp"
-                    android:src="@drawable/ic_circle_notifications_24dp" />
+                    android:src="@drawable/ic_45_okegpp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Mood 2" />
 
-                <ImageView
+                <!-- Emoji 3 -->
+                <ImageButton
+                    android:id="@+id/emoji_button_3"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_marginEnd="8dp"
-                    android:src="@drawable/ic_circle_notifications_24dp" />
+                    android:src="@drawable/ic_45_smile"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Mood 3" />
 
-                <ImageView
+                <!-- Emoji 4 -->
+                <ImageButton
+                    android:id="@+id/emoji_button_4"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_marginEnd="8dp"
-                    android:src="@drawable/ic_circle_notifications_24dp" />
+                    android:src="@drawable/ic_45_sad"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Mood 4" />
 
-                <ImageView
+                <!-- Emoji 5 -->
+                <ImageButton
+                    android:id="@+id/emoji_button_5"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:src="@drawable/ic_circle_notifications_24dp" />
+                    android:src="@drawable/ic_45_sadbed"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Mood 5" />
             </LinearLayout>
         </HorizontalScrollView>
 
