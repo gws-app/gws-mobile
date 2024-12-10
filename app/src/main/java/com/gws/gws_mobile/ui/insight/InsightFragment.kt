@@ -15,6 +15,7 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.google.gson.JsonObject
 import com.gws.gws_mobile.api.response.NewsItem
 import com.gws.gws_mobile.api.response.RecommendationsItem
 import com.gws.gws_mobile.databinding.FragmentInsightBinding
@@ -24,6 +25,7 @@ class InsightFragment : Fragment() {
     private var _binding: FragmentInsightBinding? = null
     private lateinit var newsAdapter: NewsAdapter
     private lateinit var recommendationsAdapter: RecommendationsAdapter
+    private lateinit var recommendationTagAdapter: RecommendationTagAdapter
 
     private val binding get() = _binding!!
 
@@ -32,9 +34,7 @@ class InsightFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentInsightBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -47,6 +47,10 @@ class InsightFragment : Fragment() {
         binding.rekomendasiRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.rekomendasiRecyclerView.adapter = recommendationsAdapter
 
+        recommendationTagAdapter = RecommendationTagAdapter(emptyList())
+        binding.recommendationTagsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.recommendationTagsRecyclerView.adapter = recommendationTagAdapter
+
         val insightViewModel = ViewModelProvider(this).get(InsightViewModel::class.java)
 
         val requestBody = mapOf(
@@ -56,7 +60,6 @@ class InsightFragment : Fragment() {
             "low" to null,
             "crumble" to 1
         )
-
         insightViewModel.fetchDataIfNeeded(requestBody)
 
         insightViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
@@ -84,12 +87,21 @@ class InsightFragment : Fragment() {
             }
         }
 
+        insightViewModel.tags.observe(viewLifecycleOwner) { tags ->
+            recommendationTagAdapter.updateTags(tags)
+        }
+
+        val activities = JsonObject().apply {
+            addProperty("activities", "main game|berjalan")
+        }
+        insightViewModel.fetchRecommendationTag(activities)
+
         setupMoodChart()
         return root
     }
 
     fun setupMoodChart() {
-        val moodData = listOf("bliss", "bright", "neutral", "bliss", "crumble", "neutral", "bright") // Example data
+        val moodData = listOf("bliss", "bright", "neutral", "bliss", "crumble", "neutral", "bright")
         val categories = arrayOf("12/1", "12/2", "12/3", "12/4", "12/5", "12/6", "12/7")
 
         val moodValues = mapOf(
@@ -175,9 +187,9 @@ class InsightFragment : Fragment() {
         lineChart.legend.isEnabled = false
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 }
+
