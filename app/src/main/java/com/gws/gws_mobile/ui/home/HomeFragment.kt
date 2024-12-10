@@ -1,5 +1,6 @@
 package com.gws.gws_mobile.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.gws.gws_mobile.databinding.FragmentHomeBinding
+import com.gws.gws_mobile.ui.home.addmood.AddMoodActivity
 
 class HomeFragment : Fragment() {
 
@@ -27,11 +29,27 @@ class HomeFragment : Fragment() {
         homeViewModel.quoteAuthor.observe(viewLifecycleOwner) {
             binding.textViewAuthorQuote.text = it
         }
+        setupEmojiClickListeners()
 
         homeViewModel.fetchQuote()
         return root
     }
+    private fun setupEmojiClickListeners() {
+        val emojiButtons = listOf(
+            binding.emojiButton1,
+            binding.emojiButton2,
+            binding.emojiButton3,
+            binding.emojiButton4,
+            binding.emojiButton5
+        )
 
+        emojiButtons.forEach { emojiButton ->
+            emojiButton.setOnClickListener {
+                val intent = Intent(requireContext(), AddMoodActivity::class.java)
+                startActivity(intent)
+            }
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
