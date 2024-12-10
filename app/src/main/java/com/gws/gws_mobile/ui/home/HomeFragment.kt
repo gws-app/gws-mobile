@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.gws.gws_mobile.databinding.FragmentHomeBinding
-import com.gws.gws_mobile.databinding.ItemCardQuotesBinding
 
 class HomeFragment : Fragment() {
 
@@ -21,14 +20,12 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val cardQuotesBinding = ItemCardQuotesBinding.bind(binding.cardQuotesInclude.root)
-
         homeViewModel.quoteText.observe(viewLifecycleOwner) {
-            cardQuotesBinding.textViewQuotes.text = it
+            binding.textViewQuotes.text = it
         }
 
         homeViewModel.quoteAuthor.observe(viewLifecycleOwner) {
-            cardQuotesBinding.textViewAuthorQuote.text = it
+            binding.textViewAuthorQuote.text = it
         }
 
         homeViewModel.fetchQuote()
