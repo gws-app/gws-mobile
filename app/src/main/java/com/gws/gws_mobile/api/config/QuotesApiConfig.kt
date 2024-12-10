@@ -1,5 +1,6 @@
-package com.gws.gws_mobile.api.services
+package com.gws.gws_mobile.api.config
 
+import com.gws.gws_mobile.api.ApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -22,7 +23,7 @@ object QuotesApiConfig {
             .build()
     }
 
-    fun provideQuotesApiService(): QuotesApiService {
-        return createRetrofit().create(QuotesApiService::class.java)
+    fun provideQuotesApiService(): ApiService {
+        return createRetrofit().create(ApiService::class.java)
     }
 }

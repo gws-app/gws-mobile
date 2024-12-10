@@ -1,11 +1,12 @@
-package com.gws.gws_mobile.api
+package com.gws.gws_mobile.api.config
 
+import com.gws.gws_mobile.api.ApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object ApiConfig {
+object InsightApiConfig {
     fun insightApiService(): ApiService {
         val loggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 

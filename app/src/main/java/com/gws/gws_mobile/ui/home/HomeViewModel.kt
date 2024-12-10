@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gws.gws_mobile.api.services.QuotesApiConfig
+import com.gws.gws_mobile.api.config.QuotesApiConfig
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
