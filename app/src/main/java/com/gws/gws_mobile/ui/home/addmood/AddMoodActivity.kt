@@ -46,8 +46,8 @@ class AddMoodActivity : AppCompatActivity() {
             toggleCollapseExpand(binding.llSleepContent, binding.btnCollapseSleep, R.drawable.ic_arrow_drop_up_24, R.drawable.ic_arrow_drop_down_24)
         }
 
-        binding.btnSocialInteraction.setOnClickListener {
-            toggleCollapseExpand(binding.llSocialInteractionContent, binding.btnSocialInteraction, R.drawable.ic_arrow_drop_up_24, R.drawable.ic_arrow_drop_down_24)
+        binding.btnCollapseSocialInteraction.setOnClickListener {
+            toggleCollapseExpand(binding.llSocialInteractionContent, binding.btnCollapseSocialInteraction, R.drawable.ic_arrow_drop_up_24, R.drawable.ic_arrow_drop_down_24)
         }
 
         binding.btnCollapseWorkStudy.setOnClickListener {
