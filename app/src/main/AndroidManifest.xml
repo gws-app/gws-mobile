@@ -25,6 +25,9 @@
             android:name=".ui.home.mood.StoreMoodActivity"
             android:exported="false" />
         <activity
+            android:name=".ui.home.addmood.AddMoodActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

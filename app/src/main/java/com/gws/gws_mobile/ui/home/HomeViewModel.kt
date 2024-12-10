@@ -12,7 +12,6 @@ class HomeViewModel : ViewModel() {
 
     private val _quoteText = MutableLiveData<String>()
     val quoteText: LiveData<String> = _quoteText
-
     private val _quoteAuthor = MutableLiveData<String>()
     val quoteAuthor: LiveData<String> = _quoteAuthor
 
