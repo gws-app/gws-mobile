@@ -111,7 +111,7 @@
                             android:layout_marginEnd="8dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="happy"
-                            android:src="@drawable/ic_45_sad" />
+                            android:src="@drawable/icon_addmood_1" />
 
                         <ImageButton
                             android:layout_width="40dp"
@@ -119,7 +119,7 @@
                             android:layout_marginEnd="8dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="excited"
-                            android:src="@drawable/ic_45_sad" />
+                            android:src="@drawable/icon_addmood_2" />
 
                         <ImageButton
                             android:layout_width="40dp"
@@ -127,7 +127,7 @@
                             android:layout_marginEnd="8dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="sad"
-                            android:src="@drawable/ic_45_sad" />
+                            android:src="@drawable/icon_addmood_3" />
 
                         <ImageButton
                             android:layout_width="40dp"
@@ -135,14 +135,14 @@
                             android:layout_marginEnd="8dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="stressed"
-                            android:src="@drawable/ic_45_sad" />
+                            android:src="@drawable/icon_addmood_4" />
 
                         <ImageButton
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="angry"
-                            android:src="@drawable/ic_45_sad" />
+                            android:src="@drawable/icon_addmood_5" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -158,7 +158,7 @@
                             android:layout_marginEnd="8dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="anxious"
-                            android:src="@drawable/ic_45_sad" />
+                            android:src="@drawable/icon_addmood_6" />
 
                         <ImageButton
                             android:layout_width="40dp"
@@ -166,7 +166,7 @@
                             android:layout_marginEnd="8dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="relax"
-                            android:src="@drawable/ic_45_sad" />
+                            android:src="@drawable/icon_addmood_7" />
 
                         <ImageButton
                             android:layout_width="40dp"
@@ -174,7 +174,7 @@
                             android:layout_marginEnd="8dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="grateful"
-                            android:src="@drawable/ic_45_sad" />
+                            android:src="@drawable/icon_addmood_8" />
 
                         <ImageButton
                             android:layout_width="40dp"
@@ -182,14 +182,14 @@
                             android:layout_marginEnd="8dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="confused"
-                            android:src="@drawable/ic_45_sad" />
+                            android:src="@drawable/icon_addmood_9" />
 
                         <ImageButton
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:contentDescription="bored"
-                            android:src="@drawable/ic_45_sad" />
+                            android:src="@drawable/icon_addmood_10" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
