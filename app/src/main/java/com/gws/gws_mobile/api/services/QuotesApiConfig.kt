@@ -16,7 +16,7 @@ object QuotesApiConfig {
             .build()
 
         return Retrofit.Builder()
-            .baseUrl("http://192.168.1.7:3000/api/")
+            .baseUrl("https://backendquotesprods-345634152468.asia-southeast2.run.app/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

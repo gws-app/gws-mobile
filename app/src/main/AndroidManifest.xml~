@@ -22,7 +22,7 @@
             android:name=".ui.insight.detail.DetailActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.home.addmood.AddMoodActivity"
+            android:name=".ui.home.mood.StoreMoodActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
