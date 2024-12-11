@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.gws.gws_mobile.R
+import com.gws.gws_mobile.api.response.MoodData
 import com.gws.gws_mobile.databinding.FragmentHomeBinding
 import com.gws.gws_mobile.ui.home.addmood.AddMoodActivity
 
@@ -32,7 +34,21 @@ class HomeFragment : Fragment() {
         homeViewModel.quoteAuthor.observe(viewLifecycleOwner) {
             binding.textViewAuthorQuote.text = it
         }
+        // Ambil userId yang aktif atau yang sesuai
+        val userId = "kirmanzz" // Ganti dengan userId yang valid
 
+        // Mengambil mood history berdasarkan userId
+        homeViewModel.fetchMoodHistory(userId)
+
+        // Observasi mood history
+        homeViewModel.moodHistory.observe(viewLifecycleOwner) { moodData ->
+            // Karena moodData adalah list, kita bisa mengambil data pertama atau lebih
+            if (moodData != null) {
+                moodData.firstOrNull()?.let {
+                    updateMoodCard(it)
+                }
+            }
+        }
         Glide.with(this)
             .load("https://picsum.photos/300/200")
             .diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -60,6 +76,30 @@ class HomeFragment : Fragment() {
                 startActivity(intent)
             }
         }
+    }
+    private fun updateMoodCard(moodData: MoodData) {
+        // Update emoji mood
+        val emojiResource = when (moodData.emotion) {
+            "bliss" -> R.drawable.ic_45_lupbgt
+            "bright" -> R.drawable.ic_45_okegpp
+            "neutral" -> R.drawable.ic_45_smile
+            "low" -> R.drawable.ic_45_sad
+            "crumble" -> R.drawable.ic_45_sadbed
+            else -> R.drawable.ic_45_smile
+        }
+
+        binding.emojiMood.setImageResource(emojiResource)
+        binding.textMoodName.text = moodData.emotion?.capitalize() ?: "Neutral"
+
+        // Update activities log
+        val activitiesText = "Logged Activities: ${moodData.activities}"
+        binding.textLogActivities.text = activitiesText
+
+        // Update date
+        binding.textDate.text = "WED, DEC 24, 10:30 AM MST"  // Ganti dengan data aktual dari moodData jika ada
+
+        // Update voice note info
+        binding.textNotes.text = "Catatan: Aku ingin pentol"
     }
 
     override fun onDestroyView() {
