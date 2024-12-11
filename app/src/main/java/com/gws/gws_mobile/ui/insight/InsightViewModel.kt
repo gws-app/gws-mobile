@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.JsonObject
 import com.gws.gws_mobile.api.config.NewsApiConfig
@@ -69,21 +68,17 @@ class InsightViewModel(application: Application) : AndroidViewModel(application)
     suspend fun getMostFrequentEmotionPerDayLast7Days(): List<EmotionFrequency> {
         val allEmotionData = moodDataDao.getEmotionFrequencyLast7Days()
 
-        // Mengelompokkan data berdasarkan hari
         val groupedByDay = allEmotionData.groupBy { it.day }
 
-        // Mengambil emosi dengan frekuensi terbanyak per hari
         val mostFrequentEmotions = mutableListOf<EmotionFrequency>()
 
         for ((day, emotions) in groupedByDay) {
-            // Memilih emosi dengan frekuensi terbanyak di setiap hari
             val mostFrequentEmotion = emotions.maxByOrNull { it.frequency }
             if (mostFrequentEmotion != null) {
                 mostFrequentEmotions.add(mostFrequentEmotion)
             }
         }
 
-        // Pastikan hanya ada 7 emosi (untuk 7 hari)
         return mostFrequentEmotions.take(7)
     }
 }
