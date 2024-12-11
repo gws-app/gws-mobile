@@ -28,8 +28,6 @@ class HomeViewModel : ViewModel() {
                 }
             } catch (e: Exception) {
                 Log.e("HomeViewModel", "Error fetching quote: ${e.message}")
-                _quoteText.value = "Failed to fetch quote"
-                _quoteAuthor.value = ""
             }
         }
     }
