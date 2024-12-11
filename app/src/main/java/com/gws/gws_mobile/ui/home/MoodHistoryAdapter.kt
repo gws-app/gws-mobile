@@ -1,14 +1,15 @@
 package com.gws.gws_mobile.ui.home
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.gws.gws_mobile.R
-import com.gws.gws_mobile.api.response.MoodData
+import com.gws.gws_mobile.api.response.MoodDataResponse
 import com.gws.gws_mobile.databinding.ItemMoodHistoryBinding
 
-class MoodHistoryAdapter(private val moodList: List<MoodData>) :
+class MoodHistoryAdapter(private val moodList: List<MoodDataResponse>) :
     RecyclerView.Adapter<MoodHistoryAdapter.MoodViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoodViewHolder {
@@ -31,7 +32,7 @@ class MoodHistoryAdapter(private val moodList: List<MoodData>) :
         RecyclerView.ViewHolder(binding.root) {
 
         @SuppressLint("SetTextI18n")
-        fun bind(moodData: MoodData) {
+        fun bind(moodData: MoodDataResponse) {
             binding.apply {
                 emojiMood.setImageResource(
                     when (moodData.emotion) {
@@ -45,10 +46,10 @@ class MoodHistoryAdapter(private val moodList: List<MoodData>) :
                 )
                 textMoodName.text = moodData.emotion?.capitalize() ?: "Neutral"
                 textLogActivities.text = "Logged Activities: ${
-                    moodData.activities?.get("activities")?.joinToString(", ")
-                        ?: "No activities"
-                }"
-                textDate.text = "WED, DEC 24, 10:30 AM MST" // Ganti dengan format tanggal yang sesuai
+                    moodData.activities}"
+                Log.d("MoodHistoryAdapter", "Activities: ${moodData.activities}")
+                textDate.text = moodData.created_at
+                textNotes.text = " Notes: ${moodData.note}"
             }
         }
     }

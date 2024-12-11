@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gws.gws_mobile.api.config.MoodApiConfig
 import com.gws.gws_mobile.api.config.QuotesApiConfig
-import com.gws.gws_mobile.api.response.MoodData
+import com.gws.gws_mobile.api.response.MoodDataResponse
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
@@ -18,8 +18,8 @@ class HomeViewModel : ViewModel() {
     private val _quoteAuthor = MutableLiveData<String>()
     val quoteAuthor: LiveData<String> = _quoteAuthor
 
-    private val _moodHistory = MutableLiveData<List<MoodData>?>()
-    val moodHistory: MutableLiveData<List<MoodData>?> = _moodHistory
+    private val _moodHistory = MutableLiveData<List<MoodDataResponse>?>()
+    val moodHistory: MutableLiveData<List<MoodDataResponse>?> = _moodHistory
 
     fun fetchQuote() {
         viewModelScope.launch {
@@ -42,6 +42,7 @@ class HomeViewModel : ViewModel() {
                 val response = MoodApiConfig.createApiService().getMoodHistory(userId)
                 if (response.status == "success" && response.data != null) {
                     _moodHistory.value = response.data
+                    Log.d("HomeViewModel", "Fetched mood history: ${response.data}")
                 } else {
                     Log.e("HomeViewModel", "Error fetching mood history: ${response.status}")
                 }
