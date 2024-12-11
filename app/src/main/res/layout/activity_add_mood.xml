@@ -99,8 +99,9 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_emotions">
 
+                    <!-- First Row with 5 ImageButtons and TextViews -->
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="horizontal">
@@ -113,6 +114,7 @@
                             android:orientation="vertical">
 
                             <ImageButton
+                                android:id="@+id/ivHappy"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -135,6 +137,7 @@
                             android:orientation="vertical">
 
                             <ImageButton
+                                android:id="@+id/ivExcited"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -157,6 +160,7 @@
                             android:orientation="vertical">
 
                             <ImageButton
+                                android:id="@+id/ivSad"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -179,6 +183,7 @@
                             android:orientation="vertical">
 
                             <ImageButton
+                                android:id="@+id/ivStressed"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -200,6 +205,7 @@
                             android:orientation="vertical">
 
                             <ImageButton
+                                android:id="@+id/ivAngry"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -216,10 +222,10 @@
 
                     </LinearLayout>
 
+                    <!-- Second Row with 5 ImageButtons and TextViews -->
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
                         android:gravity="center"
                         android:orientation="horizontal">
 
@@ -231,6 +237,7 @@
                             android:orientation="vertical">
 
                             <ImageButton
+                                android:id="@+id/ivAnxious"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -253,6 +260,7 @@
                             android:orientation="vertical">
 
                             <ImageButton
+                                android:id="@+id/ivRelax"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -275,6 +283,7 @@
                             android:orientation="vertical">
 
                             <ImageButton
+                                android:id="@+id/ivGrateful"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -297,6 +306,7 @@
                             android:orientation="vertical">
 
                             <ImageButton
+                                android:id="@+id/ivConfused"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -318,6 +328,7 @@
                             android:orientation="vertical">
 
                             <ImageButton
+                                android:id="@+id/ivBored"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -401,6 +412,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageButton
+                                android:id="@+id/ivSleepEarly"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -421,6 +433,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageButton
+                                android:id="@+id/ivGoodSleep"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -441,6 +454,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageButton
+                                android:id="@+id/ivMediumSleep"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -470,6 +484,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageButton
+                                android:id="@+id/ivOverslept"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -490,6 +505,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageButton
+                                android:id="@+id/ivInsomnia"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -509,6 +525,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageButton
+                                android:id="@+id/ivBadSleep"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -525,6 +542,7 @@
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
+
         <!-- social interaction -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_social_interaction"
@@ -588,6 +606,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageButton
+                                android:id="@+id/ivMeetFriends"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -608,6 +627,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageButton
+                                android:id="@+id/ivFamilyTime"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -628,6 +648,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageButton
+                                android:id="@+id/ivOnlineChat"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -657,6 +678,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageButton
+                                android:id="@+id/ivLonely"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -677,6 +699,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageButton
+                                android:id="@+id/ivConflict"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -696,10 +719,11 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageButton
+                                android:id="@+id/ivHelpedSomeone"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
-                                android:contentDescription="helped somenone"
+                                android:contentDescription="helped someone"
                                 android:src="@drawable/icon_addmood_21" />
                             <TextView
                                 android:layout_width="wrap_content"
@@ -714,7 +738,6 @@
         </androidx.cardview.widget.CardView>
 
 
-        <!-- Work/Study Card -->
         <!-- Work/Study Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_work_study"
@@ -779,6 +802,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageButton
+                                android:id="@+id/ivProductive"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -800,6 +824,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageButton
+                                android:id="@+id/ivOverwhelmed"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -821,6 +846,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageButton
+                                android:id="@+id/ivDeadlineStress"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -841,6 +867,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageButton
+                                android:id="@+id/ivBrainstorming"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -871,6 +898,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageButton
+                                android:id="@+id/ivCollaboration"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -892,6 +920,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageButton
+                                android:id="@+id/ivAttendMeeting"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -913,6 +942,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageButton
+                                android:id="@+id/ivAttendClass"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -933,6 +963,7 @@
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageButton
+                                android:id="@+id/ivLearnNewSkill"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -953,6 +984,7 @@
         </androidx.cardview.widget.CardView>
 
 
+        <!-- Hobbies Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_hobbies"
             android:layout_width="0dp"
@@ -1017,6 +1049,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivReading"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1038,6 +1071,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivGaming"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1059,6 +1093,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivCooking"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1080,6 +1115,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivArts"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1100,6 +1136,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivGardening"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1130,6 +1167,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivWriting"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1151,6 +1189,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivPhotography"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1172,6 +1211,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivDIYCrafts"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1193,6 +1233,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivLanguage"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1213,6 +1254,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivListeningMusic"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1230,6 +1272,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
+<!-- foodrink card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_food_drink"
             android:layout_width="0dp"
@@ -1293,6 +1336,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivHealthyFood"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1314,6 +1358,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivComfortFood"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1335,6 +1380,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivSkipMeals"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1356,6 +1402,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivBloating"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1376,6 +1423,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivNewRecipe"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1406,6 +1454,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivTooMuchSugar"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1427,6 +1476,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivHydrated"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1448,6 +1498,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivJunkFood"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1468,6 +1519,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivHomeMade"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1485,282 +1537,294 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
+
         <!-- Nature & Outdoor Card -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cv_nature_outdoor"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cv_food_drink">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="16dp">
-
-        <TextView
-            android:id="@+id/tv_nature_outdoor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Nature and Outdoor"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageButton
-            android:id="@+id/btn_collapse_nature_outdoor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Collapse Nature and Outdoor"
-            android:src="@drawable/ic_arrow_drop_up_24"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <LinearLayout
-            android:id="@+id/ll_nature_outdoor_content"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_nature_outdoor"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_nature_outdoor">
+            app:layout_constraintTop_toBottomOf="@+id/cv_food_drink">
 
-        <!-- First Row -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp">
 
-            <!-- Fresh Air -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:orientation="vertical"
-                android:gravity="center">
-                <ImageButton
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Fresh Air"
-                    android:src="@drawable/icon_addmood_48" />
                 <TextView
+                    android:id="@+id/tv_nature_outdoor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Fresh Air"
-                    android:textSize="12sp"
-                    android:gravity="center" />
-            </LinearLayout>
+                    android:text="Nature and Outdoor"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <!-- Park Visit -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:orientation="vertical"
-                android:gravity="center">
                 <ImageButton
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Park Visit"
-                    android:src="@drawable/icon_addmood_49" />
-                <TextView
+                    android:id="@+id/btn_collapse_nature_outdoor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Park Visit"
-                    android:textSize="12sp"
-                    android:gravity="center" />
-            </LinearLayout>
-
-            <!-- Beach -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:orientation="vertical"
-                android:gravity="center">
-                <ImageButton
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Beach"
-                    android:src="@drawable/icon_addmood_50" />
-                <TextView
-                    android:layout_width="wrap_content"
+                    android:contentDescription="Collapse Nature and Outdoor"
+                    android:src="@drawable/ic_arrow_drop_up_24"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/ll_nature_outdoor_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Beach"
-                    android:textSize="12sp"
-                    android:gravity="center" />
-            </LinearLayout>
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_nature_outdoor">
 
-            <!-- Mountain -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:orientation="vertical"
-                android:gravity="center">
-                <ImageButton
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Mountain"
-                    android:src="@drawable/icon_addmood_51" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Mountain"
-                    android:textSize="12sp"
-                    android:gravity="center" />
-            </LinearLayout>
+                    <!-- First Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal">
 
-            <!-- Indoor -->
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center">
-                <ImageButton
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Indoor"
-                    android:src="@drawable/icon_addmood_52" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Indoor"
-                    android:textSize="12sp"
-                    android:gravity="center" />
-            </LinearLayout>
-        </LinearLayout>
+                        <!-- Fresh Air -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <ImageButton
+                                android:id="@+id/ivFreshAir"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="Fresh Air"
+                                android:src="@drawable/icon_addmood_48" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Fresh Air"
+                                android:textSize="12sp"
+                                android:gravity="center" />
+                        </LinearLayout>
 
-        <!-- Second Row -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginTop="8dp">
+                        <!-- Park Visit -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <ImageButton
+                                android:id="@+id/ivParkVisit"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="Park Visit"
+                                android:src="@drawable/icon_addmood_49" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Park Visit"
+                                android:textSize="12sp"
+                                android:gravity="center" />
+                        </LinearLayout>
 
-        <!-- Camping -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Camping"
-                android:src="@drawable/icon_addmood_53" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Camping"
-                android:textSize="12sp"
-                android:gravity="center" />
-        </LinearLayout>
+                        <!-- Beach -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <ImageButton
+                                android:id="@+id/ivBeach"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="Beach"
+                                android:src="@drawable/icon_addmood_50" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Beach"
+                                android:textSize="12sp"
+                                android:gravity="center" />
+                        </LinearLayout>
 
-        <!-- Sunrise -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Sunrise"
-                android:src="@drawable/icon_addmood_54" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sunrise"
-                android:textSize="12sp"
-                android:gravity="center" />
-        </LinearLayout>
+                        <!-- Mountain -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <ImageButton
+                                android:id="@+id/ivMountain"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="Mountain"
+                                android:src="@drawable/icon_addmood_51" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Mountain"
+                                android:textSize="12sp"
+                                android:gravity="center" />
+                        </LinearLayout>
 
-        <!-- Sunset -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Sunset"
-                android:src="@drawable/icon_addmood_55" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sunset"
-                android:textSize="12sp"
-                android:gravity="center" />
-        </LinearLayout>
+                        <!-- Indoor -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <ImageButton
+                                android:id="@+id/ivIndoor"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="Indoor"
+                                android:src="@drawable/icon_addmood_52" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Indoor"
+                                android:textSize="12sp"
+                                android:gravity="center" />
+                        </LinearLayout>
+                    </LinearLayout>
 
-        <!-- Vacation -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Vacation"
-                android:src="@drawable/icon_addmood_56" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vacation"
-                android:textSize="12sp"
-                android:gravity="center" />
-        </LinearLayout>
+                    <!-- Second Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:layout_marginTop="8dp">
 
-        <!-- Picnic -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
-        <ImageButton
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Picnic"
-            android:src="@drawable/icon_addmood_57" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Picnic"
-            android:textSize="12sp"
-            android:gravity="center" />
-        </LinearLayout>
-        </LinearLayout>
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
+                        <!-- Camping -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <ImageButton
+                                android:id="@+id/ivCamping"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="Camping"
+                                android:src="@drawable/icon_addmood_53" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Camping"
+                                android:textSize="12sp"
+                                android:gravity="center" />
+                        </LinearLayout>
+
+                        <!-- Sunrise -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <ImageButton
+                                android:id="@+id/ivSunrise"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="Sunrise"
+                                android:src="@drawable/icon_addmood_54" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Sunrise"
+                                android:textSize="12sp"
+                                android:gravity="center" />
+                        </LinearLayout>
+
+                        <!-- Sunset -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <ImageButton
+                                android:id="@+id/ivSunset"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="Sunset"
+                                android:src="@drawable/icon_addmood_55" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Sunset"
+                                android:textSize="12sp"
+                                android:gravity="center" />
+                        </LinearLayout>
+
+                        <!-- Vacation -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <ImageButton
+                                android:id="@+id/ivVacation"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="Vacation"
+                                android:src="@drawable/icon_addmood_56" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Vacation"
+                                android:textSize="12sp"
+                                android:gravity="center" />
+                        </LinearLayout>
+
+                        <!-- Picnic -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center">
+                            <ImageButton
+                                android:id="@+id/ivPicnic"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="Picnic"
+                                android:src="@drawable/icon_addmood_57" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Picnic"
+                                android:textSize="12sp"
+                                android:gravity="center" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
 
 
         <!-- Entertainment Card -->
@@ -1827,6 +1891,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivWatchMovie"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1848,6 +1913,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivTheater"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1869,6 +1935,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivOrchestra"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1889,6 +1956,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivPlayGames"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1919,6 +1987,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivLiveEvent"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1940,6 +2009,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivConcert"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1961,6 +2031,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivWatchSports"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1981,6 +2052,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivReadBook"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -1997,6 +2069,7 @@
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
+
 
 
         <!-- Mindfulness Card -->
@@ -2063,6 +2136,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivMeditation"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -2084,6 +2158,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivDeepBreathing"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -2105,6 +2180,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivJournal"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -2125,6 +2201,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivSelfCare"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -2155,6 +2232,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivYoga"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -2176,6 +2254,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivGratitude"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -2197,6 +2276,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivDigitalDetox"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -2217,6 +2297,7 @@
                             android:orientation="vertical"
                             android:gravity="center">
                             <ImageButton
+                                android:id="@+id/ivEnjoyedSilence"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
                                 android:background="?attr/selectableItemBackgroundBorderless"
@@ -2233,6 +2314,7 @@
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
+
 
 
         <!-- Form Textarea (Quick Note) outside CardView -->
