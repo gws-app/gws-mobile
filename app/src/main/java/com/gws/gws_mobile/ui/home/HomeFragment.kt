@@ -96,30 +96,6 @@ class HomeFragment : Fragment() {
             }
         }
     }
-    private fun updateMoodCard(moodData: MoodData) {
-        // Update emoji mood
-        val emojiResource = when (moodData.emotion) {
-            "bliss" -> R.drawable.ic_45_lupbgt
-            "bright" -> R.drawable.ic_45_okegpp
-            "neutral" -> R.drawable.ic_45_smile
-            "low" -> R.drawable.ic_45_sad
-            "crumble" -> R.drawable.ic_45_sadbed
-            else -> R.drawable.ic_45_smile
-        }
-
-        binding.emojiMood.setImageResource(emojiResource)
-        binding.textMoodName.text = moodData.emotion?.capitalize() ?: "Neutral"
-
-        // Update activities log
-        val activitiesText = "Logged Activities: ${moodData.activities}"
-        binding.textLogActivities.text = activitiesText
-
-        // Update date
-        binding.textDate.text = "WED, DEC 24, 10:30 AM MST"  // Ganti dengan data aktual dari moodData jika ada
-
-        // Update voice note info
-        binding.textNotes.text = "Catatan: Aku ingin pentol"
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
