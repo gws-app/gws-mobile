@@ -32,7 +32,6 @@ class AddMoodViewModel(application: Application) : AndroidViewModel(application)
     fun sendMoodDataToApi(moodData: MoodData) {
         val userId = SharedPreferences.getUserId(getApplication())
 
-        // Menandakan loading
         _loading.value = true
 
         viewModelScope.launch {
