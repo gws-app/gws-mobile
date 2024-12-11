@@ -12,48 +12,33 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
-import com.google.gson.Gson
-import com.google.gson.JsonArray
-import com.google.gson.JsonObject
-import com.google.gson.JsonSyntaxException
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.gws.gws_mobile.R
-import com.gws.gws_mobile.api.config.MoodApiConfig
-import com.gws.gws_mobile.database.mood.Mood
-import com.gws.gws_mobile.database.mood.MoodDatabase
 import com.gws.gws_mobile.databinding.ActivityAddMoodBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody
-import org.json.JSONArray
-import org.json.JSONObject
 import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
-import java.io.OutputStreamWriter
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import java.util.UUID
 
 class AddMoodActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddMoodBinding
-    private val viewModel = AddMoodViewModel()
     private var mediaRecorder: MediaRecorder? = null
     private var audioFilePath: String? = null
     private var isRecording = false
     private val selectedActivities = mutableMapOf<String, List<String>>()
+
+    // ViewModel
+    private lateinit var addMoodViewModel: AddMoodViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddMoodBinding.inflate(layoutInflater)
         setContentView(binding.root)
         supportActionBar?.hide()
+
+        // Inisialisasi ViewModel
+        addMoodViewModel = ViewModelProvider(this).get(AddMoodViewModel::class.java)
 
         val moodName = intent.getStringExtra("moodName")
         moodName?.let {
@@ -62,6 +47,16 @@ class AddMoodActivity : AppCompatActivity() {
 
         setupClickListeners()
         setupActivitySelection()
+
+        // Observer untuk respons dari API
+        addMoodViewModel.apiResponse.observe(this, Observer { message ->
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        })
+
+        // Observer untuk status loading
+        addMoodViewModel.loading.observe(this, Observer { isLoading ->
+            // Tampilkan atau sembunyikan progress bar (jika ada)
+        })
     }
 
     private fun setupClickListeners() {
@@ -162,7 +157,7 @@ class AddMoodActivity : AppCompatActivity() {
     private fun toggleActivitySelection(activity: String, category: String) {
         val activitiesList = selectedActivities[category]?.toMutableList() ?: mutableListOf()
         if (activitiesList.contains(activity)) {
-            activitiesList.remove(activity)  // This was causing the error
+            activitiesList.remove(activity)
             Log.d("ToogleSELEK", "HILANG")
         } else {
             activitiesList.add(activity)
@@ -185,135 +180,10 @@ class AddMoodActivity : AppCompatActivity() {
             voiceNoteUrl = audioFilePath
         )
 
-        val moodDataLocal = MoodDataLocal(
-            user_id = "kirmanzz",
-            emotion = intent.getStringExtra("moodName"),
-            activities = selectedActivities,
-            note = binding.etQuickNote.text.toString(),
-            voice_note_url = audioFilePath,
-            created_at = getCurrentTimestamp()
-        )
+        // Mengirim data mood ke ViewModel untuk diproses
+        addMoodViewModel.saveMoodData(moodData)
 
-        // Menyimpan mood data ke dalam database
-        saveMoodDataToDatabase(moodDataLocal)
-
-        sendMoodDataToApi(moodData)
-        saveToFile(moodDataLocal)
         finish()
-    }
-
-    private fun saveMoodDataToDatabase(moodDataLocal: MoodDataLocal) {
-        // Mendapatkan instance database
-        val db = MoodDatabase.getDatabase(applicationContext)
-
-        // Menyimpan data ke dalam database menggunakan coroutine (suspend function)
-        CoroutineScope(Dispatchers.IO).launch {
-            db.moodDataDao().insertMoodData(
-                Mood(
-                    user_id = moodDataLocal.user_id.toString(),
-                    emotion = moodDataLocal.emotion.toString(),
-                    activities = Gson().toJson(moodDataLocal.activities), // Simpan activities sebagai JSON string
-                    note = moodDataLocal.note.toString(),
-                    voice_note_url = moodDataLocal.voice_note_url.toString(),
-                    created_at = moodDataLocal.created_at
-                )
-            )
-        }
-    }
-
-
-    private fun saveToFile(moodData: MoodDataLocal) {
-        try {
-            val file = File(getExternalFilesDir(null), "mood_data.json")
-
-            // Read existing JSON data from the file, if it exists
-            val jsonData = if (file.exists()) {
-                file.readText()
-            } else {
-                "{}" // Default to an empty JSON object if file doesn't exist
-            }
-
-            // Parse the existing JSON data
-            val jsonObject = Gson().fromJson(jsonData, JsonObject::class.java) ?: JsonObject()
-
-            // Get or create the "data" array
-            val dataArray = if (jsonObject.has("data")) {
-                jsonObject.getAsJsonArray("data")
-            } else {
-                JsonArray()
-            }
-
-            // Create the JsonObject for the new mood data
-            val newMoodDataJsonObject = JsonObject().apply {
-                addProperty("userId", moodData.user_id)
-                addProperty("mood", moodData.emotion)
-
-                // Convert activities to JsonObject format
-                val activitiesJsonObject = JsonObject()
-                moodData.activities?.forEach { (category, activities) ->
-                    activitiesJsonObject.add(category, Gson().toJsonTree(activities ?: JsonArray()))
-                }
-                add("activities", activitiesJsonObject)
-
-                addProperty("note", moodData.note)
-                addProperty("voiceNoteUrl", moodData.voice_note_url)
-                addProperty("created_at", getCurrentTimestamp())
-            }
-
-            // Add the new mood data to the "data" array
-            dataArray.add(newMoodDataJsonObject)
-
-            // Update the "data" array in the root JsonObject
-            jsonObject.add("data", dataArray)
-
-            // Write the updated JSON back to the file
-            file.writeText(Gson().toJson(jsonObject))
-        } catch (e: IOException) {
-            e.printStackTrace()
-            Toast.makeText(this, "Error saving data to file.", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun getCurrentTimestamp(): String {
-        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault())
-        return sdf.format(Date())
-    }
-
-    private fun sendMoodDataToApi(moodData: MoodData) {
-        val apiService = MoodApiConfig.createApiService()
-        lifecycleScope.launch {
-            try {
-                val response = apiService.saveMood(
-                    createRequestBody(moodData.userId),
-                    createRequestBody(moodData.mood),
-                    createRequestBody(Gson().toJson(moodData.activities)),
-                    createRequestBody(moodData.note ?: ""),
-                    createFilePart(moodData.voiceNoteUrl)
-                )
-                val message = if (response.code == 201) "Mood data successfully saved!" else "Failed to save mood data."
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                Log.e("AddMoodActivity", "Error saving mood data: ${e.localizedMessage}")
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(applicationContext, "Error saving data. Please try again.", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-    }
-
-    private fun createRequestBody(value: String?): RequestBody {
-        return RequestBody.create("text/plain".toMediaTypeOrNull(), value ?: "")
-    }
-
-    private fun createFilePart(fileUrl: String?): MultipartBody.Part? {
-        return fileUrl?.let {
-            val file = File(it)
-            val requestBody = RequestBody.create("audio/m4a".toMediaTypeOrNull(), file)
-            MultipartBody.Part.createFormData("voice_note_url", file.name, requestBody)
-        }
     }
 
     private fun checkPermissions(): Boolean {
@@ -390,4 +260,3 @@ class AddMoodActivity : AppCompatActivity() {
         finish()
     }
 }
-
