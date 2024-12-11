@@ -36,6 +36,7 @@ class AddMoodActivity : AppCompatActivity() {
     private var mediaRecorder: MediaRecorder? = null
     private var audioFilePath: String? = null
     private var isRecording = false
+    private val selectedActivities = mutableMapOf<String, List<String>>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,24 +85,20 @@ class AddMoodActivity : AppCompatActivity() {
             toggleCollapseExpand(binding.llMindfulnessContent, binding.btnCollapseMindfulness, R.drawable.ic_arrow_drop_up_24, R.drawable.ic_arrow_drop_down_24)
         }
 
+        setupActivitySelection()
+
         binding.btnSave.setOnClickListener {
             val quickNote = binding.etQuickNote.text.toString()
             val userId = "kirmanzz"
-            val activities = mapOf(
-                "emotions" to listOf("rawrrr", "nothing", "sadbet"),
-                "food_drink" to listOf("miras", "autan")
-            )
             val voiceNoteUrl = audioFilePath
-//            val createdAt = System.currentTimeMillis().toString()  // Waktu saat ini dalam milidetik
 
             // Membuat objek MoodData
             val moodData = MoodData(
                 userId = userId,
                 mood = moodName,
-                activities = activities,
+                activities = selectedActivities,
                 note = quickNote,
                 voiceNoteUrl = voiceNoteUrl
-//                createdAt = createdAt
             )
 
             sendMoodDataToApi(moodData)
@@ -118,7 +115,126 @@ class AddMoodActivity : AppCompatActivity() {
             }
         }
     }
+    fun setupActivitySelection() {
+        val buttons = listOf(
+            // Emotions
+            binding.ivHappy, binding.ivExcited, binding.ivSad, binding.ivStressed,
+            binding.ivAngry, binding.ivAnxious, binding.ivRelax, binding.ivGrateful,
+            binding.ivConfused, binding.ivBored,
 
+            // Food and Drink
+            binding.ivHealthyFood, binding.ivComfortFood, binding.ivSkipMeals, binding.ivBloating,
+            binding.ivNewRecipe, binding.ivTooMuchSugar, binding.ivHydrated, binding.ivJunkFood,
+            binding.ivHomeMade,
+
+            // Sleep
+            binding.ivSleepEarly, binding.ivGoodSleep, binding.ivMediumSleep, binding.ivOverslept,
+            binding.ivInsomnia, binding.ivBadSleep,
+
+            // Social Interaction
+            binding.ivMeetFriends, binding.ivFamilyTime, binding.ivOnlineChat, binding.ivLonely,
+            binding.ivConflict, binding.ivHelpedSomeone,
+
+            // Work/Study
+            binding.ivProductive, binding.ivOverwhelmed, binding.ivDeadlineStress, binding.ivBrainstorming,
+            binding.ivCollaboration, binding.ivAttendMeeting, binding.ivAttendClass, binding.ivLearnNewSkill,
+
+            // Hobbies
+            binding.ivReading, binding.ivGaming, binding.ivCooking, binding.ivArts,
+            binding.ivGardening, binding.ivWriting, binding.ivPhotography, binding.ivDIYCrafts,
+            binding.ivLanguage, binding.ivListeningMusic,
+
+            // Nature/Outdoor
+            binding.ivFreshAir, binding.ivParkVisit, binding.ivBeach, binding.ivMountain,
+            binding.ivIndoor, binding.ivCamping, binding.ivSunrise, binding.ivSunset,
+            binding.ivVacation, binding.ivPicnic,
+
+            // Entertainment
+            binding.ivWatchMovie, binding.ivTheater, binding.ivOrchestra, binding.ivPlayGames,
+            binding.ivLiveEvent, binding.ivConcert, binding.ivWatchSports, binding.ivReadBook,
+
+            // Mindfulness
+            binding.ivMeditation, binding.ivDeepBreathing, binding.ivJournal, binding.ivSelfCare,
+            binding.ivYoga, binding.ivGratitude, binding.ivDigitalDetox, binding.ivEnjoyedSilence
+        )
+
+        // Set listener untuk semua tombol ImageButton
+        buttons.forEach { button ->
+            button.setOnClickListener { view ->
+                val activity = view.contentDescription.toString()  // Mengambil contentDescription
+                val category = getCategoryForButton(view)
+                toggleActivitySelection(activity, category)
+
+                // CHECKBOX STYLE
+                toggleButtonVisualState(view)
+            }
+        }
+    }
+
+    // Fungsi untuk menentukan kategori berdasarkan button
+    private fun getCategoryForButton(view: View): String {
+        return when (view) {
+            binding.ivHappy, binding.ivExcited, binding.ivSad, binding.ivStressed,
+            binding.ivAngry, binding.ivAnxious, binding.ivRelax, binding.ivGrateful,
+            binding.ivConfused, binding.ivBored -> "Emotions"
+
+            binding.ivHealthyFood, binding.ivComfortFood, binding.ivSkipMeals, binding.ivBloating,
+            binding.ivNewRecipe, binding.ivTooMuchSugar, binding.ivHydrated, binding.ivJunkFood,
+            binding.ivHomeMade -> "Food and Drink"
+
+            binding.ivSleepEarly, binding.ivGoodSleep, binding.ivMediumSleep, binding.ivOverslept,
+            binding.ivInsomnia, binding.ivBadSleep -> "Sleep"
+
+            binding.ivMeetFriends, binding.ivFamilyTime, binding.ivOnlineChat, binding.ivLonely,
+            binding.ivConflict, binding.ivHelpedSomeone -> "Social Interaction"
+
+            binding.ivProductive, binding.ivOverwhelmed, binding.ivDeadlineStress, binding.ivBrainstorming,
+            binding.ivCollaboration, binding.ivAttendMeeting, binding.ivAttendClass, binding.ivLearnNewSkill -> "Work or Study"
+
+            binding.ivReading, binding.ivGaming, binding.ivCooking, binding.ivArts,
+            binding.ivGardening, binding.ivWriting, binding.ivPhotography, binding.ivDIYCrafts,
+            binding.ivLanguage, binding.ivListeningMusic -> "Hobbies"
+
+            binding.ivFreshAir, binding.ivParkVisit, binding.ivBeach, binding.ivMountain,
+            binding.ivIndoor, binding.ivCamping, binding.ivSunrise, binding.ivSunset,
+            binding.ivVacation, binding.ivPicnic -> "Nature and Outdoor"
+
+            binding.ivWatchMovie, binding.ivTheater, binding.ivOrchestra, binding.ivPlayGames,
+            binding.ivLiveEvent, binding.ivConcert, binding.ivWatchSports, binding.ivReadBook -> "Entertainment"
+
+            binding.ivMeditation, binding.ivDeepBreathing, binding.ivJournal, binding.ivSelfCare,
+            binding.ivYoga, binding.ivGratitude, binding.ivDigitalDetox, binding.ivEnjoyedSilence -> "Mindfulness"
+
+            else -> ""
+        }
+    }
+
+    private fun toggleActivitySelection(activity: String, category: String) {
+        if (selectedActivities.containsKey(category)) {
+            val activitiesList = selectedActivities[category]?.toMutableList() ?: mutableListOf()
+            if (activitiesList.contains(activity)) {
+                activitiesList.remove(activity)
+                Log.d("ToogleSELEK", "HILANG")
+            } else {
+                activitiesList.add(activity)
+                Log.d("ToogleSELEK", "$activity")
+            }
+            selectedActivities[category] = activitiesList
+        } else {
+            selectedActivities[category] = listOf(activity)
+        }
+    }
+
+    private fun toggleButtonVisualState(view: View) {
+        if (view is ImageButton) {
+            val isSelected = selectedActivities.values.flatten().contains(view.contentDescription.toString())
+            if (isSelected) {
+                view.setBackgroundResource(R.drawable.selected_background)
+            } else {
+                view.setBackgroundResource(R.drawable.default_background)
+            }
+        }
+    }
 //    private fun saveMoodData() {
 //        val selectedMood = "Happy"
 //        val quickNote = binding.etQuickNote.text.toString()
@@ -267,9 +383,9 @@ class AddMoodActivity : AppCompatActivity() {
                         Toast.makeText(applicationContext, "Yey, kamu udah simpen mood kamuu!", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Log.e("AddMoodActivity", "Failed to save mood data: ${response.status}")
+                    Log.e("AddMoodActivity", "Yah, gagal simpen mood kamu:(: ${response.status}")
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(applicationContext, "Failed to save mood data", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, "Yah, gagal simpen mood kamu:(", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
@@ -308,5 +424,4 @@ class AddMoodActivity : AppCompatActivity() {
         }
         finish()
     }
-
 }
