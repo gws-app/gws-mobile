@@ -12,8 +12,17 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
+import com.google.gson.Gson
 import com.gws.gws_mobile.R
+import com.gws.gws_mobile.api.config.MoodApiConfig
 import com.gws.gws_mobile.databinding.ActivityAddMoodBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -71,7 +80,27 @@ class AddMoodActivity : AppCompatActivity() {
         }
 
         binding.btnSave.setOnClickListener {
-            saveMoodData()
+            val selectedMood = "Happy"  // Anda bisa mengganti ini dengan data yang dipilih pengguna
+            val quickNote = binding.etQuickNote.text.toString()  // Misalnya EditText untuk catatan
+            val userId = "kirmanzz"  // Ganti dengan userId yang sesuai
+            val activities = mapOf(
+                "emotions" to listOf("rawrrr", "nothing", "sadbet"),
+                "food_drink" to listOf("miras", "autan")
+            )
+            val voiceNoteUrl = audioFilePath  // Ini adalah URL file audio yang direkam
+//            val createdAt = System.currentTimeMillis().toString()  // Waktu saat ini dalam milidetik
+
+            // Membuat objek MoodData
+            val moodData = MoodData(
+                userId = userId,
+                mood = selectedMood,
+                activities = activities,
+                note = quickNote,
+                voiceNoteUrl = voiceNoteUrl
+//                createdAt = createdAt
+            )
+
+            sendMoodDataToApi(moodData)
             finish()
         }
 
@@ -86,19 +115,19 @@ class AddMoodActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveMoodData() {
-        val selectedMood = "Happy"
-        val quickNote = binding.etQuickNote.text.toString()
-
-        val moodData = MoodData(selectedMood, quickNote, audioFilePath)
-
-        val jsonString = viewModel.saveMoodData(moodData)
-
-        Log.d("AddMoodActivity", "JSON data: $jsonString")
-        saveToFile(jsonString)
-
-        Toast.makeText(this, "Data saved successfully!", Toast.LENGTH_SHORT).show()
-    }
+//    private fun saveMoodData() {
+//        val selectedMood = "Happy"
+//        val quickNote = binding.etQuickNote.text.toString()
+//
+//        val moodData = MoodData(selectedMood, quickNote, audioFilePath)
+//
+//        val jsonString = viewModel.saveMoodData(moodData)
+//
+//        Log.d("AddMoodActivity", "JSON data: $jsonString")
+//        saveToFile(jsonString)
+//
+//        Toast.makeText(this, "Data saved successfully!", Toast.LENGTH_SHORT).show()
+//    }
 
     private fun saveToFile(jsonString: String) {
         val file = File(filesDir, "mood_data.json")
@@ -202,6 +231,70 @@ class AddMoodActivity : AppCompatActivity() {
         }
         audioFilePath = null
     }
+    private fun sendMoodDataToApi(moodData: MoodData) {
+        val apiService = MoodApiConfig.createApiService()
+
+        lifecycleScope.launch {
+            try {
+                // convert activities to json
+                val activitiesJson = Gson().toJson(moodData.activities)
+
+                val userIdRequestBody = createRequestBody(moodData.userId)
+                val moodRequestBody = createRequestBody(moodData.mood)
+                val activitiesRequestBody = createRequestBody(activitiesJson) // Mengonversi Map ke JSON string
+                val noteRequestBody = createRequestBody(moodData.note ?: "")
+//                val createdAtRequestBody = createRequestBody(moodData.createdAt)
+
+                val voiceNotePart = createFilePart(moodData.voiceNoteUrl)
+
+                val response = apiService.saveMood(
+                    userIdRequestBody,
+                    moodRequestBody,
+                    activitiesRequestBody,
+                    noteRequestBody,
+                    voiceNotePart
+//                    createdAtRequestBody
+                )
+
+                // Periksa respons dan beri feedback
+                if (response.code == 201) {  // Status code 200 berarti sukses
+                    Log.d("AddMoodActivity", "Mood data successfully saved to API!")
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(applicationContext, "Yey, kamu udah simpen mood kamuu!", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Log.e("AddMoodActivity", "Failed to save mood data: ${response.status}")
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(applicationContext, "Failed to save mood data", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.d("FormData", "userId: ${moodData.userId}")
+                Log.d("FormData", "mood: ${moodData.mood}")
+                Log.d("FormData", "activities: ${Gson().toJson(moodData.activities)}")
+                Log.d("FormData", "note: ${moodData.note}")
+//                Log.d("FormData", "createdAt: ${moodData.createdAt}")
+                Log.e("AddMoodActivity", "Error saving mood data to API: ${e.localizedMessage}")
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(applicationContext, "Error saving data. Please try again.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
+    private fun createRequestBody(value: String?): RequestBody {
+        return RequestBody.create("text/plain".toMediaTypeOrNull(), value ?: "")
+    }
+
+    private fun createFilePart(fileUrl: String?): MultipartBody.Part? {
+        return fileUrl?.let {
+            val file = File(it)
+            val requestBody = RequestBody.create("audio/m4a".toMediaTypeOrNull(), file)
+            MultipartBody.Part.createFormData("voice_note_url", file.name, requestBody)
+        }
+    }
+
 
     override fun onBackPressed() {
         super.onBackPressed()
