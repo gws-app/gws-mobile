@@ -16,21 +16,19 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.gson.JsonObject
-import com.gws.gws_mobile.api.response.NewsItem
-import com.gws.gws_mobile.api.response.RecommendationsItem
 import com.gws.gws_mobile.databinding.FragmentInsightBinding
 
 class InsightFragment : Fragment() {
 
     private var _binding: FragmentInsightBinding? = null
     private lateinit var newsAdapter: NewsAdapter
-    private lateinit var recommendationsAdapter: RecommendationsAdapter
     private lateinit var recommendationTagAdapter: RecommendationTagAdapter
 
     private val binding get() = _binding!!
 
-    private val newsList = mutableListOf<NewsItem>()
-    private val recommendationsList = mutableListOf<RecommendationsItem>()
+    private val insightViewModel by lazy {
+        ViewModelProvider(this).get(InsightViewModel::class.java)
+    }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
@@ -39,29 +37,35 @@ class InsightFragment : Fragment() {
         _binding = FragmentInsightBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        newsAdapter = NewsAdapter(newsList)
+        // Initialize adapters
+        newsAdapter = NewsAdapter(emptyList())
         binding.newsRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.newsRecyclerView.adapter = newsAdapter
 
-        recommendationsAdapter = RecommendationsAdapter(recommendationsList)
-        binding.rekomendasiRecyclerView.layoutManager = LinearLayoutManager(context)
-        binding.rekomendasiRecyclerView.adapter = recommendationsAdapter
-
         recommendationTagAdapter = RecommendationTagAdapter(emptyList())
-        binding.recommendationTagsRecyclerView.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.recommendationTagsRecyclerView.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.recommendationTagsRecyclerView.adapter = recommendationTagAdapter
 
-        val insightViewModel = ViewModelProvider(this).get(InsightViewModel::class.java)
+        // Observe ViewModel LiveData
+        setupObservers()
 
-        val requestBody = mapOf(
-            "bliss" to 1,
-            "bright" to null,
-            "neutral" to 1,
-            "low" to null,
-            "crumble" to 1
-        )
-        insightViewModel.fetchDataIfNeeded(requestBody)
+        // Fetch news
+        insightViewModel.fetchNews()
 
+        // Fetch recommendation tags
+        val activities = JsonObject().apply {
+            addProperty("activities", "main game|berjalan")
+        }
+        insightViewModel.fetchRecommendationTag(activities)
+
+        // Setup chart
+        setupMoodChart()
+
+        return root
+    }
+
+    private fun setupObservers() {
         insightViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
             if (isLoading) {
                 binding.progressIndicator.visibility = View.VISIBLE
@@ -74,33 +78,18 @@ class InsightFragment : Fragment() {
 
         insightViewModel.response.observe(viewLifecycleOwner) { apiResponse ->
             apiResponse?.let {
-                val validNews = it.news?.filterNotNull() ?: emptyList()
-                val validRecommendations = it.recommendations?.filterNotNull() ?: emptyList()
-
-                newsList.clear()
-                newsList.addAll(validNews)
-                newsAdapter.notifyDataSetChanged()
-
-                recommendationsList.clear()
-                recommendationsList.addAll(validRecommendations)
-                recommendationsAdapter.notifyDataSetChanged()
+                val validContents = it.contents?.filterNotNull() ?: emptyList()
+                newsAdapter = NewsAdapter(validContents)
+                binding.newsRecyclerView.adapter = newsAdapter
             }
         }
 
         insightViewModel.tags.observe(viewLifecycleOwner) { tags ->
             recommendationTagAdapter.updateTags(tags)
         }
-
-        val activities = JsonObject().apply {
-            addProperty("activities", "main game|berjalan")
-        }
-        insightViewModel.fetchRecommendationTag(activities)
-
-        setupMoodChart()
-        return root
     }
 
-    fun setupMoodChart() {
+    private fun setupMoodChart() {
         val moodData = listOf("bliss", "bright", "neutral", "bliss", "crumble", "neutral", "bright")
         val categories = arrayOf("12/1", "12/2", "12/3", "12/4", "12/5", "12/6", "12/7")
 
@@ -118,17 +107,15 @@ class InsightFragment : Fragment() {
             val currentValue = moodValues[moodData[i]] ?: 0f
             val nextValue = moodValues[moodData[i + 1]] ?: 0f
 
-            // Determine color based on the target mood
             val segmentColor = when (moodData[i + 1]) {
                 "bliss" -> "#845ec2"
                 "bright" -> "#d65db1"
                 "neutral" -> "#00bfff"
                 "low" -> "#ffc75f"
                 "crumble" -> "#ff9671"
-                else -> "#cccccc" // Default color
+                else -> "#cccccc"
             }
 
-            // Create a dataset for the segment
             val segmentEntries = listOf(
                 Entry(i.toFloat(), currentValue),
                 Entry((i + 1).toFloat(), nextValue)
@@ -173,14 +160,13 @@ class InsightFragment : Fragment() {
                     }
                 }
             }
-            axisMinimum = 1f // Start from 1
-            axisMaximum = 5f // End at
+            axisMinimum = 1f
+            axisMaximum = 5f
             granularity = 1f
             textSize = 12f
         }
-        lineChart.axisRight.isEnabled = false // Disable right y-axis
+        lineChart.axisRight.isEnabled = false
 
-        // Additional chart settings
         lineChart.setTouchEnabled(true)
         lineChart.setPinchZoom(true)
         lineChart.description.isEnabled = false
@@ -192,4 +178,3 @@ class InsightFragment : Fragment() {
         _binding = null
     }
 }
-
