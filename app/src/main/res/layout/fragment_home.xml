@@ -64,16 +64,16 @@
         android:layout_width="8dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@+id/search_box"
-        app:layout_constraintEnd_toStartOf="@+id/notification_icon"
+        app:layout_constraintEnd_toStartOf="@+id/logout_icon"
         app:layout_constraintStart_toEndOf="@+id/search_box"
         app:layout_constraintTop_toTopOf="@+id/search_box" />
 
-    <ImageView
-        android:id="@+id/notification_icon"
+    <ImageButton
+        android:id="@+id/logout_icon"
         android:layout_width="29dp"
         android:layout_height="35dp"
         android:contentDescription="@string/notification_icon"
-        android:src="@drawable/ic_circle_notifications_24dp"
+        android:src="@drawable/ic_arrow_right_alt_24"
         app:layout_constraintBottom_toBottomOf="@+id/search_box"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/search_box" />
