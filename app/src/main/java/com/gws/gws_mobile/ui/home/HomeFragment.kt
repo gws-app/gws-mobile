@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.gws.gws_mobile.databinding.FragmentHomeBinding
 import com.gws.gws_mobile.ui.home.addmood.AddMoodActivity
 
@@ -29,11 +32,18 @@ class HomeFragment : Fragment() {
         homeViewModel.quoteAuthor.observe(viewLifecycleOwner) {
             binding.textViewAuthorQuote.text = it
         }
+
+        Glide.with(this)
+            .load("https://picsum.photos/300/200")
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .into(binding.imageViewBackground)
+
         setupEmojiClickListeners()
 
         homeViewModel.fetchQuote()
         return root
     }
+
     private fun setupEmojiClickListeners() {
         val emojiButtons = listOf(
             binding.emojiButton1,
@@ -50,6 +60,7 @@ class HomeFragment : Fragment() {
             }
         }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
