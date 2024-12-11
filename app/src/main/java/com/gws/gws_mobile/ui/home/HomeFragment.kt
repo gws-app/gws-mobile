@@ -52,10 +52,11 @@ class HomeFragment : Fragment() {
             binding.emojiButton4,
             binding.emojiButton5
         )
-
-        emojiButtons.forEach { emojiButton ->
+        val moodName = listOf("bliss", "bright", "neutral", "low", "crumble")
+        emojiButtons.forEachIndexed { index, emojiButton ->
             emojiButton.setOnClickListener {
                 val intent = Intent(requireContext(), AddMoodActivity::class.java)
+                intent.putExtra("moodName", moodName[index])
                 startActivity(intent)
             }
         }

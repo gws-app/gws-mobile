@@ -43,6 +43,11 @@ class AddMoodActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
 
+        val moodName = intent.getStringExtra("moodName")
+        if (moodName != null) {
+            println("Mood Name: $moodName")  // Menampilkan nama mood yang diterima
+            Log.d("AddActivity", "Mood = $moodName")
+        }
         binding.btnBack.setOnClickListener {
             onBackPressed()
         }
@@ -80,20 +85,19 @@ class AddMoodActivity : AppCompatActivity() {
         }
 
         binding.btnSave.setOnClickListener {
-            val selectedMood = "Happy"  // Anda bisa mengganti ini dengan data yang dipilih pengguna
-            val quickNote = binding.etQuickNote.text.toString()  // Misalnya EditText untuk catatan
-            val userId = "kirmanzz"  // Ganti dengan userId yang sesuai
+            val quickNote = binding.etQuickNote.text.toString()
+            val userId = "kirmanzz"
             val activities = mapOf(
                 "emotions" to listOf("rawrrr", "nothing", "sadbet"),
                 "food_drink" to listOf("miras", "autan")
             )
-            val voiceNoteUrl = audioFilePath  // Ini adalah URL file audio yang direkam
+            val voiceNoteUrl = audioFilePath
 //            val createdAt = System.currentTimeMillis().toString()  // Waktu saat ini dalam milidetik
 
             // Membuat objek MoodData
             val moodData = MoodData(
                 userId = userId,
-                mood = selectedMood,
+                mood = moodName,
                 activities = activities,
                 note = quickNote,
                 voiceNoteUrl = voiceNoteUrl
