@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.gws.gws_mobile.R
@@ -19,6 +20,8 @@ class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var moodHistoryAdapter: MoodHistoryAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -40,15 +43,31 @@ class HomeFragment : Fragment() {
         // Mengambil mood history berdasarkan userId
         homeViewModel.fetchMoodHistory(userId)
 
+        moodHistoryAdapter = MoodHistoryAdapter(emptyList())
+        binding.recyclerViewMoodHistory.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerViewMoodHistory.adapter = moodHistoryAdapter
         // Observasi mood history
         homeViewModel.moodHistory.observe(viewLifecycleOwner) { moodData ->
-            // Karena moodData adalah list, kita bisa mengambil data pertama atau lebih
-            if (moodData != null) {
-                moodData.firstOrNull()?.let {
-                    updateMoodCard(it)
-                }
+            moodData?.let {
+                moodHistoryAdapter = MoodHistoryAdapter(it)
+                binding.recyclerViewMoodHistory.adapter = moodHistoryAdapter
             }
         }
+//        // Ambil userId yang aktif atau yang sesuai
+//        val userId = "kirmanzz" // Ganti dengan userId yang valid
+//
+//        // Mengambil mood history berdasarkan userId
+//        homeViewModel.fetchMoodHistory(userId)
+//
+//        // Observasi mood history
+//        homeViewModel.moodHistory.observe(viewLifecycleOwner) { moodData ->
+//            // Karena moodData adalah list, kita bisa mengambil data pertama atau lebih
+//            if (moodData != null) {
+//                moodData.firstOrNull()?.let {
+//                    updateMoodCard(it)
+//                }
+//            }
+//        }
         Glide.with(this)
             .load("https://picsum.photos/300/200")
             .diskCacheStrategy(DiskCacheStrategy.NONE)

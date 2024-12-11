@@ -13,3 +13,8 @@ data class MoodData(
 	val activities: Map<String, List<String>>? = null,
 )
 
+data class MoodResponseHome(
+	val code: Int? = null,
+	val data: List<MoodData>? = null,
+	val status: String? = null
+)

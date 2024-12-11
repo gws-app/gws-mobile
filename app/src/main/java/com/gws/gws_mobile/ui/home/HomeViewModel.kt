@@ -41,7 +41,7 @@ class HomeViewModel : ViewModel() {
             try {
                 val response = MoodApiConfig.createApiService().getMoodHistory(userId)
                 if (response.status == "success" && response.data != null) {
-                    _moodHistory.value = listOf(response.data)
+                    _moodHistory.value = response.data
                 } else {
                     Log.e("HomeViewModel", "Error fetching mood history: ${response.status}")
                 }

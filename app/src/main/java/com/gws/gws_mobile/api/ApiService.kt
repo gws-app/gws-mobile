@@ -2,6 +2,7 @@ package com.gws.gws_mobile.api
 
 import com.google.gson.JsonObject
 import com.gws.gws_mobile.api.response.MoodResponse
+import com.gws.gws_mobile.api.response.MoodResponseHome
 import com.gws.gws_mobile.api.response.NewsResponse
 import com.gws.gws_mobile.api.response.QuotesResponse
 import com.gws.gws_mobile.api.response.RecommendationTagResponse
@@ -40,6 +41,6 @@ interface ApiService {
     ): MoodResponse
 
     @GET("/api/moods/{userId}")
-    suspend fun getMoodHistory(@Path("userId") userId: String): MoodResponse
+    suspend fun getMoodHistory(@Path("userId") userId: String): MoodResponseHome
 
 }
