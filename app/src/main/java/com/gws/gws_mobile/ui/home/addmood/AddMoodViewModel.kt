@@ -9,6 +9,7 @@ import com.google.gson.Gson
 import com.gws.gws_mobile.api.config.MoodApiConfig
 import com.gws.gws_mobile.database.mood.Mood
 import com.gws.gws_mobile.database.mood.MoodDatabase
+import com.gws.gws_mobile.helper.SharedPreferences
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,25 +29,24 @@ class AddMoodViewModel(application: Application) : AndroidViewModel(application)
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> get() = _loading
 
-    // Fungsi untuk mengirim mood data ke API
     fun sendMoodDataToApi(moodData: MoodData) {
+        val userId = SharedPreferences.getUserId(getApplication())
+
         // Menandakan loading
         _loading.value = true
 
-        // Memulai coroutine untuk mengirim data
         viewModelScope.launch {
             try {
                 val apiService = MoodApiConfig.createApiService()
                 val response = apiService.saveMood(
-                    createRequestBody(moodData.userId),
+                    createRequestBody(userId),
                     createRequestBody(moodData.mood),
                     createRequestBody(Gson().toJson(moodData.activities)),
                     createRequestBody(moodData.note ?: ""),
                     createFilePart(moodData.voiceNoteUrl)
                 )
 
-                // Jika sukses, tampilkan pesan sukses
-                val message = if (response.code == 201) "Mood data successfully saved!" else "Failed to save mood data."
+                val message = if (response.code == 201) "Mood data saved successfully!" else "Failed to save mood data."
                 _apiResponse.value = message
 
             } catch (e: Exception) {
@@ -72,8 +72,9 @@ class AddMoodViewModel(application: Application) : AndroidViewModel(application)
 
     // Menyimpan mood data ke dalam database lokal
     fun saveMoodData(moodData: MoodData) {
+        val userId = SharedPreferences.getUserId(getApplication())
         val moodDataLocal = MoodDataLocal(
-            user_id = "kirmanzz",
+            user_id = userId,
             emotion = moodData.mood,
             activities = moodData.activities,
             note = moodData.note,

@@ -5,16 +5,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.gws.gws_mobile.R
-import com.gws.gws_mobile.api.response.MoodData
 import com.gws.gws_mobile.databinding.FragmentHomeBinding
+import com.gws.gws_mobile.helper.SharedPreferences
 import com.gws.gws_mobile.ui.home.addmood.AddMoodActivity
+import com.gws.gws_mobile.ui.login.LoginActivity
 
 class HomeFragment : Fragment() {
 
@@ -38,44 +37,40 @@ class HomeFragment : Fragment() {
             binding.textViewAuthorQuote.text = it
         }
         // Ambil userId yang aktif atau yang sesuai
-        val userId = "kirmanzz" // Ganti dengan userId yang valid
+        val userId = SharedPreferences.getUserId(requireContext())
 
         // Mengambil mood history berdasarkan userId
-        homeViewModel.fetchMoodHistory(userId)
+        if (userId != null) {
+            homeViewModel.fetchMoodHistory(userId)
+        }
 
         moodHistoryAdapter = MoodHistoryAdapter(emptyList())
         binding.recyclerViewMoodHistory.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewMoodHistory.adapter = moodHistoryAdapter
-        // Observasi mood history
+
         homeViewModel.moodHistory.observe(viewLifecycleOwner) { moodData ->
             moodData?.let {
                 moodHistoryAdapter = MoodHistoryAdapter(it)
                 binding.recyclerViewMoodHistory.adapter = moodHistoryAdapter
             }
         }
-//        // Ambil userId yang aktif atau yang sesuai
-//        val userId = "kirmanzz" // Ganti dengan userId yang valid
-//
-//        // Mengambil mood history berdasarkan userId
-//        homeViewModel.fetchMoodHistory(userId)
-//
-//        // Observasi mood history
-//        homeViewModel.moodHistory.observe(viewLifecycleOwner) { moodData ->
-//            // Karena moodData adalah list, kita bisa mengambil data pertama atau lebih
-//            if (moodData != null) {
-//                moodData.firstOrNull()?.let {
-//                    updateMoodCard(it)
-//                }
-//            }
-//        }
+
         Glide.with(this)
             .load("https://picsum.photos/300/200")
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .into(binding.imageViewBackground)
 
         setupEmojiClickListeners()
-
         homeViewModel.fetchQuote()
+
+        binding.logoutIcon.setOnClickListener {
+            SharedPreferences.clearUserId(requireContext())
+
+            val intent = Intent(requireContext(), LoginActivity::class.java)
+            startActivity(intent)
+
+            activity?.finish()
+        }
         return root
     }
 

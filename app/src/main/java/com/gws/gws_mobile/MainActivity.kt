@@ -11,11 +11,14 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.gws.gws_mobile.databinding.ActivityMainBinding
+import com.gws.gws_mobile.helper.SharedPreferences
 import com.gws.gws_mobile.ui.chatbot.ChatbotActivity
 import com.gws.gws_mobile.ui.settings.SettingPreferences
 import com.gws.gws_mobile.ui.settings.SettingsViewModel
 import com.gws.gws_mobile.ui.settings.ViewModelFactory
 import com.gws.gws_mobile.ui.settings.dataStore
+import android.widget.Toast
+import com.gws.gws_mobile.ui.login.LoginActivity
 
 class MainActivity : AppCompatActivity() {
 
@@ -58,6 +61,12 @@ class MainActivity : AppCompatActivity() {
             intent = Intent(this, ChatbotActivity::class.java)
             startActivity(intent)
         }
+        val userId = SharedPreferences.getUserId(this)
 
+        if (userId == null) {
+            Toast.makeText(this, "User is not logged in", Toast.LENGTH_SHORT).show()
+            finish()
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
     }
 }
