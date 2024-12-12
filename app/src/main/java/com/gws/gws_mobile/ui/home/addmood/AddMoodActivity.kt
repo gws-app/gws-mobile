@@ -61,6 +61,7 @@ class AddMoodActivity : AppCompatActivity() {
             binding.btnCollapseSleep to binding.llSleepContent,
             binding.btnCollapseSocialInteraction to binding.llSocialInteractionContent,
             binding.btnCollapseWorkStudy to binding.llWorkStudyContent,
+            binding.btnCollapseHobbies to binding.llHobbiesContent,
             binding.btnCollapseFoodDrink to binding.llFoodDrinkContent,
             binding.btnCollapseNatureOutdoor to binding.llNatureOutdoorContent,
             binding.btnCollapseEntertainment to binding.llEntertainmentContent,
