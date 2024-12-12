@@ -50,6 +50,7 @@
 
             <TextView
                 android:id="@+id/tvRecommendationsSubtitle"
+                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Orang-orang dengan minat yang sama melakukan kegiatan ini untuk membuat mereka bahagia:"
