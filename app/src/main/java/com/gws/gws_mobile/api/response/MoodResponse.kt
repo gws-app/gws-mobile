@@ -18,7 +18,7 @@ data class MoodDataResponse(
 	val emotion: String? = null,
 	val activities: Map<String, List<String>>? = null,
 	val note: String? = null,  // Menambahkan note untuk menampung data catatan
-	val voice_note_url: String? = null,  // voice_note_url
+	var voice_note_url: String? = null,  // voice_note_url
 	val created_at: String? = null  // created_at
 )
 

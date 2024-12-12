@@ -69,7 +69,6 @@ class AddMoodViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    // Menyimpan mood data ke dalam database lokal
     fun saveMoodData(moodData: MoodData) {
         val userId = SharedPreferences.getUserId(getApplication())
         val moodDataLocal = MoodDataLocal(
@@ -85,11 +84,9 @@ class AddMoodViewModel(application: Application) : AndroidViewModel(application)
         sendMoodDataToApi(moodData)
     }
 
-    // Menyimpan data mood ke database lokal
     private fun saveMoodDataToDatabase(moodDataLocal: MoodDataLocal) {
         val db = MoodDatabase.getDatabase(getApplication())
         CoroutineScope(Dispatchers.IO).launch {
-            // Manually format the activities
             val formattedActivities = moodDataLocal.activities?.entries?.joinToString(
                 prefix = "{", postfix = "}", separator = ","
             ) { (key, value) -> "$key=[${value.joinToString(",")}]" }
@@ -107,7 +104,6 @@ class AddMoodViewModel(application: Application) : AndroidViewModel(application)
         }
     }
 
-    // Mendapatkan timestamp saat ini
     private fun getCurrentTimestamp(): String {
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         return sdf.format(Date())

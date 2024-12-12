@@ -27,8 +27,6 @@ class AddMoodActivity : AppCompatActivity() {
     private var audioFilePath: String? = null
     private var isRecording = false
     private val selectedActivities = mutableMapOf<String, List<String>>()
-
-    // ViewModel
     private lateinit var addMoodViewModel: AddMoodViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +35,6 @@ class AddMoodActivity : AppCompatActivity() {
         setContentView(binding.root)
         supportActionBar?.hide()
 
-        // Inisialisasi ViewModel
         addMoodViewModel = ViewModelProvider(this).get(AddMoodViewModel::class.java)
 
         val moodName = intent.getStringExtra("moodName")
@@ -48,22 +45,17 @@ class AddMoodActivity : AppCompatActivity() {
         setupClickListeners()
         setupActivitySelection()
 
-        // Observer untuk respons dari API
         addMoodViewModel.apiResponse.observe(this, Observer { message ->
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         })
 
-        // Observer untuk status loading
         addMoodViewModel.loading.observe(this, Observer { isLoading ->
-            // Tampilkan atau sembunyikan progress bar (jika ada)
         })
     }
 
     private fun setupClickListeners() {
-        // Back Button
         binding.btnBack.setOnClickListener { onBackPressed() }
 
-        // Collapsing buttons
         val collapseButtons = listOf(
             binding.btnCollapseEmotions to binding.llEmotionsContent,
             binding.btnCollapseSleep to binding.llSleepContent,
@@ -79,10 +71,8 @@ class AddMoodActivity : AppCompatActivity() {
             button.setOnClickListener { toggleCollapseExpand(contentView, button as ImageButton) }
         }
 
-        // Save Button
         binding.btnSave.setOnClickListener { saveMoodData() }
 
-        // Record Button
         binding.btnRecord.setOnClickListener {
             if (isRecording) stopRecording() else if (checkPermissions()) startRecording()
         }
@@ -180,7 +170,6 @@ class AddMoodActivity : AppCompatActivity() {
             voiceNoteUrl = audioFilePath
         )
 
-        // Mengirim data mood ke ViewModel untuk diproses
         addMoodViewModel.saveMoodData(moodData)
 
         finish()

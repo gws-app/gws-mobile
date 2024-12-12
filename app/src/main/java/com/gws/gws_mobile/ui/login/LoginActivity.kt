@@ -3,29 +3,24 @@ package com.gws.gws_mobile.ui.login
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.gws.gws_mobile.MainActivity
 import com.gws.gws_mobile.R
-import com.gws.gws_mobile.api.config.MoodApiConfig
-import com.gws.gws_mobile.database.mood.Mood
-import com.gws.gws_mobile.database.mood.MoodDatabase
 import com.gws.gws_mobile.helper.SharedPreferences
-import kotlinx.coroutines.launch
-import java.time.ZoneId
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 
 class LoginActivity : AppCompatActivity() {
-
     private lateinit var editTextUserId: EditText
     private lateinit var buttonLogin: Button
-    private lateinit var moodDatabase: MoodDatabase
+    private lateinit var loginViewModel: LoginViewModel
+    private lateinit var progressIndicator: CircularProgressIndicator
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,76 +30,39 @@ class LoginActivity : AppCompatActivity() {
 
         editTextUserId = findViewById(R.id.editTextUserId)
         buttonLogin = findViewById(R.id.buttonLogin)
+        progressIndicator = findViewById(R.id.progressIndicator)
 
-        // Initialize database
-        moodDatabase = MoodDatabase.getDatabase(this)
+        loginViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
+
+        loginViewModel.moodList.observe(this, Observer { moodList -> hideProgressIndicator()
+
+            if (moodList.isNotEmpty()) {
+                loginViewModel.saveToDatabase(moodList)
+
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        })
 
         buttonLogin.setOnClickListener {
             val userId = editTextUserId.text.toString()
-
             if (userId.isNotEmpty()) {
                 SharedPreferences.saveUserId(this, userId)
+                showProgressIndicator()
 
-                fetchMoodHistory(userId) { moodList ->
-                    saveToDatabase(moodList)
-
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }
+                loginViewModel.fetchMoodHistory(userId)
             } else {
-                Toast.makeText(this, "User ID cannot be empty", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "User ID tidak boleh kosong", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun fetchMoodHistory(userId: String, callback: (List<Mood>) -> Unit) {
-        lifecycleScope.launch {
-            try {
-                val response = MoodApiConfig.createApiService().getMoodHistory(userId)
-                if (response.status == "success" && response.data != null) {
-                    val inputFormatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
-                    val outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-
-                    val moodList = response.data.map {
-                        val formattedCreatedAt = try {
-                            val zonedDateTime = ZonedDateTime.parse(it.created_at, inputFormatter)
-                            zonedDateTime.withZoneSameInstant(ZoneId.systemDefault()).format(outputFormatter)
-                        } catch (e: Exception) {
-                            Log.e("FetchMoodHistory", "Error formatting date: ${e.message}")
-                            it.created_at
-                        }
-
-                        Mood(
-                            user_id = it.user_id.toString(),
-                            emotion = it.emotion.toString(),
-                            activities = it.activities.toString(),
-                            note = it.note ?: "",
-                            voice_note_url = it.voice_note_url ?: "",
-                            created_at = formattedCreatedAt.toString()
-                        )
-                    }
-                    callback(moodList)
-                } else {
-                    Log.e("LoginActivity", "Error fetching mood history: ${response.status}")
-                    callback(emptyList())
-                }
-            } catch (e: Exception) {
-                Log.e("LoginActivity", "Error fetching mood history: ${e.message}")
-                callback(emptyList())
-            }
-        }
+    private fun showProgressIndicator() {
+        progressIndicator.visibility = View.VISIBLE
     }
 
-    private fun saveToDatabase(moodList: List<Mood>) {
-        lifecycleScope.launch {
-            moodDatabase.moodDataDao().deleteAllMoodData()
-            moodList.forEach { mood ->
-                moodDatabase.moodDataDao().insertMoodData(mood)
-            }
-            Log.d("LoginActivity", "Mood history saved to database")
-        }
+    private fun hideProgressIndicator() {
+        progressIndicator.visibility = View.GONE
     }
 }
-
