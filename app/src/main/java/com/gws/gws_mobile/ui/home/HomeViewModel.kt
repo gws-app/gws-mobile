@@ -1,16 +1,18 @@
 package com.gws.gws_mobile.ui.home
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gws.gws_mobile.api.config.MoodApiConfig
 import com.gws.gws_mobile.api.config.QuotesApiConfig
-import com.gws.gws_mobile.api.response.MoodDataResponse
+import com.gws.gws_mobile.database.mood.Mood
+import com.gws.gws_mobile.database.mood.MoodDatabase
+import com.gws.gws_mobile.database.mood.MoodRepository
 import kotlinx.coroutines.launch
 
-class HomeViewModel : ViewModel() {
+class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _quoteText = MutableLiveData<String>()
     val quoteText: LiveData<String> = _quoteText
@@ -18,8 +20,15 @@ class HomeViewModel : ViewModel() {
     private val _quoteAuthor = MutableLiveData<String>()
     val quoteAuthor: LiveData<String> = _quoteAuthor
 
-    private val _moodHistory = MutableLiveData<List<MoodDataResponse>?>()
-    val moodHistory: MutableLiveData<List<MoodDataResponse>?> = _moodHistory
+    private val _moodHistory = MutableLiveData<List<Mood>>()
+    val moodHistory: LiveData<List<Mood>> = _moodHistory
+
+    private val repository: MoodRepository
+
+    init {
+        val moodDao = MoodDatabase.getDatabase(application).moodDataDao()
+        repository = MoodRepository(moodDao)
+    }
 
     fun fetchQuote() {
         viewModelScope.launch {
@@ -36,18 +45,15 @@ class HomeViewModel : ViewModel() {
             }
         }
     }
-    fun fetchMoodHistory(userId: String) {
+
+    fun fetchMoodHistory() {
         viewModelScope.launch {
             try {
-                val response = MoodApiConfig.createApiService().getMoodHistory(userId)
-                if (response.status == "success" && response.data != null) {
-                    _moodHistory.value = response.data
-                    Log.d("HomeViewModel", "Fetched mood history: ${response.data}")
-                } else {
-                    Log.e("HomeViewModel", "Error fetching mood history: ${response.status}")
-                }
+                val data = repository.getMoodHistoryFromDatabase()
+                _moodHistory.value = data
+                Log.d("HomeViewModel", "Fetched mood history from database: $data")
             } catch (e: Exception) {
-                Log.e("HomeViewModel", "Error fetching mood history: ${e.message}")
+                Log.e("HomeViewModel", "Error fetching mood history from database: ${e.message}")
             }
         }
     }

@@ -8,8 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.switchmaterial.SwitchMaterial
-import com.gws.gws_mobile.R
 import com.gws.gws_mobile.databinding.FragmentSettingsBinding
 import com.gws.gws_mobile.helper.SharedPreferences
 import com.gws.gws_mobile.ui.login.LoginActivity
@@ -50,6 +48,8 @@ class SettingsFragment : Fragment() {
         }
 
         binding.btnLogout.setOnClickListener {
+            settingsViewModel.clearDatabase(requireContext())
+
             SharedPreferences.clearUserId(requireContext())
 
             val intent = Intent(requireContext(), LoginActivity::class.java)

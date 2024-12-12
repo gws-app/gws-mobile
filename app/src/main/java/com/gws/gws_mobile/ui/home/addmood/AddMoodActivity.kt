@@ -173,7 +173,7 @@ class AddMoodActivity : AppCompatActivity() {
 
     private fun saveMoodData() {
         val moodData = MoodData(
-            userId = "kirmanzz",
+            userId = "",
             mood = intent.getStringExtra("moodName"),
             activities = selectedActivities,
             note = binding.etQuickNote.text.toString(),

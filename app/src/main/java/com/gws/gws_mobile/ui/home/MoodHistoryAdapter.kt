@@ -1,25 +1,20 @@
 package com.gws.gws_mobile.ui.home
 
-import android.annotation.SuppressLint
-import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.gws.gws_mobile.R
-import com.gws.gws_mobile.api.response.MoodDataResponse
+import com.gws.gws_mobile.database.mood.Mood
 import com.gws.gws_mobile.databinding.ItemMoodHistoryBinding
-import java.text.SimpleDateFormat
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.util.Locale
-import java.util.TimeZone
 
-class MoodHistoryAdapter(moods: List<MoodDataResponse>) :
+class MoodHistoryAdapter(private var moods: List<Mood>) :
     RecyclerView.Adapter<MoodHistoryAdapter.MoodViewHolder>() {
 
-    private val moodList = moods.sortedByDescending { it.created_at?.let { it1 -> parseDate(it1) } }
+    fun updateData(newMoods: List<Mood>) {
+        moods = newMoods.sortedByDescending { it.created_at }
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoodViewHolder {
         val binding = ItemMoodHistoryBinding.inflate(
@@ -31,17 +26,16 @@ class MoodHistoryAdapter(moods: List<MoodDataResponse>) :
     }
 
     override fun onBindViewHolder(holder: MoodViewHolder, position: Int) {
-        val moodData = moodList[position]
+        val moodData = moods[position]
         holder.bind(moodData)
     }
 
-    override fun getItemCount(): Int = moodList.size
+    override fun getItemCount(): Int = moods.size
 
     inner class MoodViewHolder(private val binding: ItemMoodHistoryBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        @SuppressLint("SetTextI18n")
-        fun bind(moodData: MoodDataResponse) {
+        fun bind(moodData: Mood) {
             binding.apply {
                 emojiMood.setImageResource(
                     when (moodData.emotion) {
@@ -53,52 +47,33 @@ class MoodHistoryAdapter(moods: List<MoodDataResponse>) :
                         else -> R.drawable.ic_45_smile
                     }
                 )
-                textMoodName.text = moodData.emotion?.capitalize() ?: "Neutral"
+                textMoodName.text = moodData.emotion.replaceFirstChar { it.uppercaseChar() }
 
-                val activityList = moodData.activities?.values?.flatten()?.joinToString(", ") ?: "No activities logged"
-                textLogActivities.text = "Logged Activities: $activityList"
+                val activityString = moodData.activities.trim('{', '}')
+                val activityList = mutableListOf<String>()
 
-                Log.d("MoodHistoryAdapter", "Activities: $activityList")
+                val keyValuePairs = activityString.split("],")
 
-                val createdAt = moodData.created_at
-                try {
-                    val formattedDate = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-                        Instant.parse(createdAt)
-                            .atZone(ZoneId.systemDefault())
-                            .format(formatter)
-                    } else {
-                        val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-                        parser.timeZone = TimeZone.getTimeZone("UTC")
-                        val date = parser.parse(createdAt)
-                        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-                        formatter.format(date!!)
+                keyValuePairs.forEach { pair ->
+                    val cleanedPair = if (!pair.endsWith("]")) "$pair]" else pair
+                    val splitPair = cleanedPair.split("=")
+                    if (splitPair.size == 2) {
+                        val activitiesPart = splitPair[1].trim('[', ']')
+                        val activities = activitiesPart.split(",")
+                        activities.forEach { activity ->
+                            activityList.add(activity.trim())
+                        }
                     }
-                    textDate.text = formattedDate
-                } catch (e: Exception) {
-                    textDate.text = "Invalid date"
-                    Log.e("MoodHistoryAdapter", "Error parsing date", e)
                 }
 
-                textNotes.text = " Notes: ${moodData.note}"
-            }
-        }
-    }
+                textLogActivities.text = "Activities: ${activityList.joinToString(", ")}"
 
-    private fun parseDate(dateString: String): Long? {
-        return try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Instant.parse(dateString).toEpochMilli()
-            } else {
-                val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-                parser.timeZone = TimeZone.getTimeZone("UTC")
-                val date = parser.parse(dateString)
-                date?.time
+                Log.d("MoodHistoryAdapter", "Activities: ${activityList.joinToString(", ")}")
+
+                textDate.text = moodData.created_at
+
+                textNotes.text = "Notes: ${moodData.note ?: "No notes"}"
             }
-        } catch (e: Exception) {
-            Log.e("MoodHistoryAdapter", "Error parsing date for sorting", e)
-            null
         }
     }
 }
-

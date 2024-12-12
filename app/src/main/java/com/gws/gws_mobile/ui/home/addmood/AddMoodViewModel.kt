@@ -89,11 +89,16 @@ class AddMoodViewModel(application: Application) : AndroidViewModel(application)
     private fun saveMoodDataToDatabase(moodDataLocal: MoodDataLocal) {
         val db = MoodDatabase.getDatabase(getApplication())
         CoroutineScope(Dispatchers.IO).launch {
+            // Manually format the activities
+            val formattedActivities = moodDataLocal.activities?.entries?.joinToString(
+                prefix = "{", postfix = "}", separator = ","
+            ) { (key, value) -> "$key=[${value.joinToString(",")}]" }
+
             db.moodDataDao().insertMoodData(
                 Mood(
                     user_id = moodDataLocal.user_id.toString(),
                     emotion = moodDataLocal.emotion.toString(),
-                    activities = Gson().toJson(moodDataLocal.activities),
+                    activities = formattedActivities.toString(),
                     note = moodDataLocal.note.toString(),
                     voice_note_url = moodDataLocal.voice_note_url.toString(),
                     created_at = moodDataLocal.created_at
@@ -104,7 +109,7 @@ class AddMoodViewModel(application: Application) : AndroidViewModel(application)
 
     // Mendapatkan timestamp saat ini
     private fun getCurrentTimestamp(): String {
-        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault())
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
         return sdf.format(Date())
     }
 }

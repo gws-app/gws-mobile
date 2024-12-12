@@ -13,9 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.gws.gws_mobile.databinding.FragmentHomeBinding
-import com.gws.gws_mobile.helper.SharedPreferences
 import com.gws.gws_mobile.ui.home.addmood.AddMoodActivity
-import com.gws.gws_mobile.ui.login.LoginActivity
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
@@ -29,13 +27,16 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var moodHistoryAdapter: MoodHistoryAdapter
+    private lateinit var homeViewModel: HomeViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        val homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        homeViewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application))
+            .get(HomeViewModel::class.java)
 
         homeViewModel.quoteText.observe(viewLifecycleOwner) {
             binding.textViewQuotes.text = it
@@ -45,13 +46,8 @@ class HomeFragment : Fragment() {
             binding.textViewAuthorQuote.text = it
         }
 
-        // Ambil userId yang aktif atau yang sesuai
-        val userId = SharedPreferences.getUserId(requireContext())
-
-        // Mengambil mood history berdasarkan userId
-        if (userId != null) {
-            homeViewModel.fetchMoodHistory(userId)
-        }
+        // Mengambil mood history dari database
+        homeViewModel.fetchMoodHistory()
 
         moodHistoryAdapter = MoodHistoryAdapter(emptyList())
         binding.recyclerViewMoodHistory.layoutManager = LinearLayoutManager(requireContext())
@@ -59,8 +55,7 @@ class HomeFragment : Fragment() {
 
         homeViewModel.moodHistory.observe(viewLifecycleOwner) { moodData ->
             moodData?.let {
-                moodHistoryAdapter = MoodHistoryAdapter(it)
-                binding.recyclerViewMoodHistory.adapter = moodHistoryAdapter
+                moodHistoryAdapter.updateData(it)
             }
         }
 
