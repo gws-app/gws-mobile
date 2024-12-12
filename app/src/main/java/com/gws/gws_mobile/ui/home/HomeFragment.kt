@@ -1,6 +1,8 @@
 package com.gws.gws_mobile.ui.home
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +16,12 @@ import com.gws.gws_mobile.databinding.FragmentHomeBinding
 import com.gws.gws_mobile.helper.SharedPreferences
 import com.gws.gws_mobile.ui.home.addmood.AddMoodActivity
 import com.gws.gws_mobile.ui.login.LoginActivity
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
 
 class HomeFragment : Fragment() {
 
@@ -36,6 +44,7 @@ class HomeFragment : Fragment() {
         homeViewModel.quoteAuthor.observe(viewLifecycleOwner) {
             binding.textViewAuthorQuote.text = it
         }
+
         // Ambil userId yang aktif atau yang sesuai
         val userId = SharedPreferences.getUserId(requireContext())
 
@@ -63,6 +72,8 @@ class HomeFragment : Fragment() {
         setupEmojiClickListeners()
         homeViewModel.fetchQuote()
 
+        displayCurrentDateTime()
+
         return root
     }
 
@@ -82,6 +93,19 @@ class HomeFragment : Fragment() {
                 startActivity(intent)
             }
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun displayCurrentDateTime() {
+        val currentDateTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            Instant.now().atZone(ZoneId.systemDefault()).format(formatter)
+        } else {
+            val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            formatter.format(Date())
+        }
+
+        binding.textDateMood.text = currentDateTime
     }
 
     override fun onDestroyView() {

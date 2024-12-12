@@ -116,15 +116,17 @@
                         android:id="@+id/text_date_mood"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="WED, DEC 24, 10:30 AM MST"
-                        android:textSize="12sp"
-                        android:textColor="?attr/colorOnSurfaceVariant"
                         android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
                         android:gravity="center"
-                        app:layout_constraintWidth_percent="1"
-                        app:layout_constraintStart_toStartOf="parent"
+                        android:text="WED, DEC 24, 10:30 AM MST"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/emoji_scroll" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/emoji_scroll"
+                        app:layout_constraintWidth_percent="1" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -166,6 +168,7 @@
                         android:id="@+id/textViewQuotes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
                         android:text="Keep going, you're doing great!"
                         android:textSize="16sp"
                         android:textColor="#FFF"
@@ -180,7 +183,8 @@
                         android:textSize="14sp"
                         android:textColor="#FFF"
                         android:gravity="end"
-                        android:layout_marginTop="8dp" />
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
