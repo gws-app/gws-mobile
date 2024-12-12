@@ -142,16 +142,11 @@
                 android:id="@+id/card_quotes_include"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
+                android:layout_margin="16dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp"
                 app:cardBackgroundColor="?attr/colorSurface"
-                app:strokeColor="?attr/colorPrimary"
-                app:layout_constraintTop_toBottomOf="@id/text_home"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                app:strokeColor="?attr/colorPrimary">
 
                 <ImageView
                     android:id="@+id/imageViewBackground"
