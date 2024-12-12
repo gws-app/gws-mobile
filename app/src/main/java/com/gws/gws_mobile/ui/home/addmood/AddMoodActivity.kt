@@ -68,6 +68,10 @@ class AddMoodActivity : AppCompatActivity() {
             binding.btnCollapseMindfulness to binding.llMindfulnessContent
         )
 
+        collapseButtons.forEach { (_, contentView) ->
+            contentView.visibility = View.GONE
+        }
+
         collapseButtons.forEach { (button, contentView) ->
             button.setOnClickListener { toggleCollapseExpand(contentView, button as ImageButton) }
         }
