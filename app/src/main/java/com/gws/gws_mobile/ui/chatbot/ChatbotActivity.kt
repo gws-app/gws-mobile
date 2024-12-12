@@ -142,9 +142,12 @@ class ChatbotActivity : AppCompatActivity() {
     }
 
     private fun cleanUpSentence(sentence: String): List<String> {
-        val sentenceWords = sentence.split(" ").map { it.lowercase() }
+        // Remove all non-alphabetic characters using regex
+        val cleanedSentence = sentence.replace(Regex("[^A-Za-z\\s]"), "")
+        val sentenceWords = cleanedSentence.split(" ").map { it.lowercase() }
         return sentenceWords.map { lemmatizer.lemmatize(it) }
     }
+
 
     private fun bow(sentence: String): FloatArray {
         val sentenceWords = cleanUpSentence(sentence)
