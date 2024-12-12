@@ -63,14 +63,6 @@ class HomeFragment : Fragment() {
         setupEmojiClickListeners()
         homeViewModel.fetchQuote()
 
-        binding.logoutIcon.setOnClickListener {
-            SharedPreferences.clearUserId(requireContext())
-
-            val intent = Intent(requireContext(), LoginActivity::class.java)
-            startActivity(intent)
-
-            activity?.finish()
-        }
         return root
     }
 
