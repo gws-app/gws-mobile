@@ -163,10 +163,17 @@ class AddMoodActivity : AppCompatActivity() {
     }
 
     private fun saveMoodData() {
+
+        val allActivities = selectedActivities.toMutableMap()
+        if (binding.etAdditionalNote.text.isNotBlank()) {
+            val additionalActivity = listOf(binding.etAdditionalNote.text.toString())
+            allActivities["Additional Activities"] = additionalActivity
+        }
         val moodData = MoodData(
             userId = "",
             mood = intent.getStringExtra("moodName"),
-            activities = selectedActivities,
+            activities = allActivities,
+            additionalActivities = binding.etAdditionalNote.text.toString(),
             note = binding.etQuickNote.text.toString(),
             voiceNoteUrl = audioFilePath
         )

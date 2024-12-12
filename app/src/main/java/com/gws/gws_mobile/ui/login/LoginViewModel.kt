@@ -56,6 +56,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                             user_id = itMoodData.user_id.toString(),
                             emotion = itMoodData.emotion.toString(),
                             activities = itMoodData.activities.toString(),
+                            additional_activities = "",
                             note = itMoodData.note ?: "",
                             voice_note_url = localVoiceNotePath.toString(),
                             created_at = formattedCreatedAt.toString()

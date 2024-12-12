@@ -2315,7 +2315,51 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_additional_note"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cv_mindfulness">
 
+            <!-- Card Content -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Label TextView for Quick Note -->
+                <TextView
+                    android:id="@+id/tv_additional_note_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Additional Activities"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp" />
+
+                <!-- Form Textarea (Quick Note) inside CardView -->
+                <EditText
+                    android:id="@+id/et_additional_note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Enter your additional activities"
+                    android:gravity="top|start"
+                    android:inputType="textMultiLine"
+                    android:lines="4"
+                    android:maxLines="5"
+                    android:scrollbars="vertical"
+                    android:padding="16dp" />
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
 
         <!-- Form Textarea (Quick Note) outside CardView -->
         <androidx.cardview.widget.CardView
@@ -2329,7 +2373,7 @@
             app:cardElevation="4dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cv_mindfulness">
+            app:layout_constraintTop_toBottomOf="@+id/cv_additional_note">
 
             <!-- Card Content -->
             <LinearLayout

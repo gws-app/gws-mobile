@@ -75,6 +75,7 @@ class AddMoodViewModel(application: Application) : AndroidViewModel(application)
             user_id = userId,
             emotion = moodData.mood,
             activities = moodData.activities,
+            additional_activites = moodData.additionalActivities,
             note = moodData.note,
             voice_note_url = moodData.voiceNoteUrl,
             created_at = getCurrentTimestamp()
@@ -87,7 +88,14 @@ class AddMoodViewModel(application: Application) : AndroidViewModel(application)
     private fun saveMoodDataToDatabase(moodDataLocal: MoodDataLocal) {
         val db = MoodDatabase.getDatabase(getApplication())
         CoroutineScope(Dispatchers.IO).launch {
-            val formattedActivities = moodDataLocal.activities?.entries?.joinToString(
+
+            val allActivities = moodDataLocal.activities?.toMutableMap() ?: mutableMapOf()
+
+            if (!moodDataLocal.additional_activites.isNullOrBlank()) {
+                allActivities["Additional Activities"] = listOf(moodDataLocal.additional_activites)
+            }
+
+            val formattedActivities = allActivities.entries.joinToString(
                 prefix = "{", postfix = "}", separator = ","
             ) { (key, value) -> "$key=[${value.joinToString(",")}]" }
 
@@ -95,7 +103,8 @@ class AddMoodViewModel(application: Application) : AndroidViewModel(application)
                 Mood(
                     user_id = moodDataLocal.user_id.toString(),
                     emotion = moodDataLocal.emotion.toString(),
-                    activities = formattedActivities.toString(),
+                    activities = formattedActivities,
+                    additional_activities = moodDataLocal.additional_activites.toString(),
                     note = moodDataLocal.note.toString(),
                     voice_note_url = moodDataLocal.voice_note_url.toString(),
                     created_at = moodDataLocal.created_at
