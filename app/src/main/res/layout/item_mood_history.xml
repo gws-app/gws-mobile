@@ -32,10 +32,11 @@
             android:id="@+id/mood_details_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_marginStart="16dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/emoji_mood">
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/emoji_mood"
+            app:layout_constraintTop_toTopOf="parent">
 
             <!-- Mood Name -->
             <TextView
@@ -43,8 +44,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Blissful"
-                android:textSize="16sp"
-                android:textColor="?attr/colorOnSurface"/>
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="16sp" />
 
             <!-- Logged Activities -->
             <TextView
@@ -52,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Meditation, Reading"
-                android:textColor="?attr/colorOnSurfaceVariant"/>
+                android:textColor="?attr/colorOnSurfaceVariant" />
 
             <!-- Date -->
             <TextView
@@ -60,8 +61,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="WED, DEC 24, 10:30 AM"
-                android:textSize="12sp"
-                android:textColor="?attr/colorOnSurfaceVariant"/>
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <!-- Optional Voice Note Section (can be conditionally shown) -->

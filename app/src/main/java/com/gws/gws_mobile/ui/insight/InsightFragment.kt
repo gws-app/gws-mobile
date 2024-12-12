@@ -56,6 +56,16 @@ class InsightFragment : Fragment() {
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.recommendationTagsRecyclerView.adapter = recommendationTagAdapter
 
+        insightViewModel.tags.observe(viewLifecycleOwner) { tagList ->
+            if (tagList.isNullOrEmpty()) {
+                binding.tvRecommendationsSubtitle.visibility = View.GONE
+            } else {
+                binding.tvRecommendationsSubtitle.visibility = View.VISIBLE
+                recommendationTagAdapter.updateTags(tagList)
+            }
+        }
+
+
         setupObservers()
         insightViewModel.fetchNews()
 
@@ -226,11 +236,14 @@ class InsightFragment : Fragment() {
         }
     }
 
+    // Fungsi untuk mengambil emosi yang paling sering muncul per hari dalam 7 hari terakhir
     private fun getMostFrequentEmotionPerDayLast7Days() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
+                // Mengambil data emosi yang paling sering muncul per hari
                 val mostFrequentEmotions = insightViewModel.getMostFrequentEmotionPerDayLast7Days()
 
+                // Menampilkan hasil emosi yang paling sering muncul per hari
                 mostFrequentEmotions.forEach {
                     Log.d("MostFrequentEmotion", "Day: ${it.day}, Emotion: ${it.emotion}, Frequency: ${it.frequency}")
                 }
