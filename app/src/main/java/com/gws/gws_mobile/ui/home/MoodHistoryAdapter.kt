@@ -15,12 +15,83 @@ import com.gws.gws_mobile.databinding.ItemMoodHistoryBinding
 import java.io.File
 import java.io.IOException
 
+import java.text.SimpleDateFormat
+import java.util.*
+
 class MoodHistoryAdapter(private var moods: List<Mood>) :
     RecyclerView.Adapter<MoodHistoryAdapter.MoodViewHolder>() {
 
+    private val activityList = mutableListOf<String>()
+
+    interface OnResultListener {
+        fun onResultReceived(result: String)
+    }
+
+    private var onResultListener: OnResultListener? = null
+
+    fun setOnResultListener(listener: OnResultListener) {
+        onResultListener = listener
+    }
+
     fun updateData(newMoods: List<Mood>) {
         moods = newMoods.sortedByDescending { it.created_at }
+        updateActivityList(newMoods)
         notifyDataSetChanged()
+
+        val todayActivities = getTodayActivities()
+        val result = """"Activities": "${todayActivities.joinToString(" | ")}""""
+
+        onResultListener?.onResultReceived(result)
+    }
+
+    private fun updateActivityList(newMoods: List<Mood>) {
+        activityList.clear()
+        newMoods.forEach { mood ->
+            val activityString = mood.activities.trim('{', '}')
+            val activityItems = mutableListOf<String>()
+
+            val keyValuePairs = activityString.split("],")
+            keyValuePairs.forEach { pair ->
+                val cleanedPair = if (!pair.endsWith("]")) "$pair]" else pair
+                val splitPair = cleanedPair.split("=")
+                if (splitPair.size == 2) {
+                    val activitiesPart = splitPair[1].trim('[', ']')
+                    val activities = activitiesPart.split(",")
+                    activities.forEach { activity ->
+                        activityItems.add(activity.trim())
+                    }
+                }
+            }
+            activityList.addAll(activityItems)
+        }
+    }
+
+    private fun getTodayActivities(): List<String> {
+        val today = getTodayDateString()
+        return moods.filter { it.created_at.startsWith(today) }
+            .flatMap { mood ->
+                val activityString = mood.activities.trim('{', '}')
+                val activityItems = mutableListOf<String>()
+
+                val keyValuePairs = activityString.split("],")
+                keyValuePairs.forEach { pair ->
+                    val cleanedPair = if (!pair.endsWith("]")) "$pair]" else pair
+                    val splitPair = cleanedPair.split("=")
+                    if (splitPair.size == 2) {
+                        val activitiesPart = splitPair[1].trim('[', ']')
+                        val activities = activitiesPart.split(",")
+                        activities.forEach { activity ->
+                            activityItems.add(activity.trim())
+                        }
+                    }
+                }
+                activityItems
+            }
+    }
+
+    private fun getTodayDateString(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        return dateFormat.format(Date())
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoodViewHolder {
@@ -60,8 +131,9 @@ class MoodHistoryAdapter(private var moods: List<Mood>) :
                 )
                 textMoodName.text = moodData.emotion.replaceFirstChar { it.uppercaseChar() }
 
+                // Menampilkan hanya aktivitas yang relevan untuk mood ini
                 val activityString = moodData.activities.trim('{', '}')
-                val activityList = mutableListOf<String>()
+                val activityItems = mutableListOf<String>()
 
                 val keyValuePairs = activityString.split("],")
                 keyValuePairs.forEach { pair ->
@@ -71,11 +143,11 @@ class MoodHistoryAdapter(private var moods: List<Mood>) :
                         val activitiesPart = splitPair[1].trim('[', ']')
                         val activities = activitiesPart.split(",")
                         activities.forEach { activity ->
-                            activityList.add(activity.trim())
+                            activityItems.add(activity.trim())
                         }
                     }
                 }
-                textLogActivities.text = "Activities: ${activityList.joinToString(", ")}"
+                textLogActivities.text = "Activities: ${activityItems.joinToString(", ")}"
                 textDate.text = moodData.created_at
                 textNotes.text = "Notes: ${moodData.note ?: "No notes"}"
 
@@ -192,4 +264,3 @@ class MoodHistoryAdapter(private var moods: List<Mood>) :
         holder.releaseMediaPlayer()
     }
 }
-

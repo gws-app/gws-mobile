@@ -9,22 +9,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.gws.gws_mobile.api.config.QuotesApiConfig
-import com.gws.gws_mobile.database.mood.Mood
-import com.gws.gws_mobile.database.mood.MoodDatabase
-import com.gws.gws_mobile.database.mood.MoodRepository
 import com.gws.gws_mobile.databinding.FragmentHomeBinding
 import com.gws.gws_mobile.ui.home.addmood.AddMoodActivity
-import kotlinx.coroutines.launch
+import org.json.JSONArray
+import org.json.JSONObject
+import java.io.File
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.ZoneId
@@ -39,6 +35,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var moodHistoryAdapter: MoodHistoryAdapter
     private lateinit var homeViewModel: HomeViewModel
+    private var uniqueActivities: List<String> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -46,8 +43,10 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        homeViewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application))
-            .get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProvider(
+            this,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(requireActivity().application)
+        ).get(HomeViewModel::class.java)
 
         homeViewModel.quoteText.observe(viewLifecycleOwner) {
             binding.textViewQuotes.text = it
@@ -68,11 +67,23 @@ class HomeFragment : Fragment() {
 
         showProgressIndicator()
 
-        // Fetch both data in parallel
         homeViewModel.fetchMoodHistory()
         homeViewModel.fetchQuote()
 
         moodHistoryAdapter = MoodHistoryAdapter(emptyList())
+        moodHistoryAdapter.setOnResultListener(object : MoodHistoryAdapter.OnResultListener {
+            override fun onResultReceived(result: String) {
+                val activitiesString = result.substringAfter(":").trim().trim('"')
+                val activitiesList = activitiesString
+                    .split(" | ")
+                    .map { it.trim().toLowerCase(Locale.getDefault()) }
+                    .distinct()
+                uniqueActivities = activitiesList
+
+                saveActivitiesToJsonFile(uniqueActivities)
+            }
+        })
+
         binding.recyclerViewMoodHistory.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewMoodHistory.adapter = moodHistoryAdapter
 
@@ -87,6 +98,21 @@ class HomeFragment : Fragment() {
         return root
     }
 
+    private fun saveActivitiesToJsonFile(activitiesList: List<String>) {
+        val fileName = "activities.json"
+        val file = File(requireContext().filesDir, fileName)
+        val jsonObject = JSONObject()
+        jsonObject.put("activities", JSONArray(activitiesList))
+
+        try {
+            file.writeText(jsonObject.toString())
+//            Toast.makeText(requireContext(), "Activities saved to $fileName", Toast.LENGTH_SHORT).show()
+        } catch (e: IOException) {
+            e.printStackTrace()
+            Toast.makeText(requireContext(), "Failed to save activities", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private fun showProgressIndicator() {
         binding.progressIndicator.visibility = View.VISIBLE
     }
@@ -96,7 +122,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun checkIfDataLoaded() {
-        // Check if all data is loaded: quote, author, and mood history
         if (homeViewModel.quoteText.value != null &&
             homeViewModel.quoteAuthor.value != null &&
             homeViewModel.moodHistory.value != null) {
@@ -112,11 +137,11 @@ class HomeFragment : Fragment() {
             binding.emojiButton4,
             binding.emojiButton5
         )
-        val moodName = listOf("bliss", "bright", "neutral", "low", "crumble")
+        val moodNames = listOf("bliss", "bright", "neutral", "low", "crumble")
         emojiButtons.forEachIndexed { index, emojiButton ->
             emojiButton.setOnClickListener {
                 val intent = Intent(requireContext(), AddMoodActivity::class.java)
-                intent.putExtra("moodName", moodName[index])
+                intent.putExtra("moodName", moodNames[index])
                 startActivity(intent)
             }
         }
