@@ -34,15 +34,13 @@ class LoginActivity : AppCompatActivity() {
 
         loginViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
 
-        loginViewModel.moodList.observe(this, Observer { moodList -> hideProgressIndicator()
+        loginViewModel.moodList.observe(this, { moodList -> hideProgressIndicator()
 
-            if (moodList.isNotEmpty()) {
                 loginViewModel.saveToDatabase(moodList)
 
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
-            }
         })
 
         buttonLogin.setOnClickListener {

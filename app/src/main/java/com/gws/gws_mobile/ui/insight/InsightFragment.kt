@@ -19,8 +19,10 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.gws.gws_mobile.databinding.FragmentInsightBinding
 import kotlinx.coroutines.launch
+import java.io.File
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -45,7 +47,6 @@ class InsightFragment : Fragment() {
         _binding = FragmentInsightBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // Initialize adapters
         newsAdapter = NewsAdapter(emptyList())
         binding.newsRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.newsRecyclerView.adapter = newsAdapter
@@ -55,26 +56,46 @@ class InsightFragment : Fragment() {
             LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.recommendationTagsRecyclerView.adapter = recommendationTagAdapter
 
-        // Observe ViewModel LiveData
         setupObservers()
-
-        // Fetch news
         insightViewModel.fetchNews()
 
-        // Fetch recommendation tags
-        val activities = JsonObject().apply {
-            addProperty("activities", "main game|berjalan")
+        val activities = readActivitiesFromJsonFile()
+        if (activities != null) {
+            insightViewModel.fetchRecommendationTag(activities)
+        } else {
+            Log.e("InsightFragment", "Failed to read activities from JSON file")
         }
-        insightViewModel.fetchRecommendationTag(activities)
 
-        // Setup chart
         setupMoodChart()
-
-        // Get most frequent emotions for the last 7 days
         getMostFrequentEmotionPerDayLast7Days()
 
         return root
     }
+
+    private fun readActivitiesFromJsonFile(): JsonObject? {
+        val fileName = "activities.json"
+        val file = File(requireContext().filesDir, fileName)
+        return if (file.exists()) {
+            try {
+                val jsonString = file.readText()
+                val jsonObject = JsonParser.parseString(jsonString).asJsonObject
+
+                val activitiesArray = jsonObject.getAsJsonArray("activities")
+                val activitiesString = activitiesArray.joinToString(" | ") { it.asString }
+                val activities = JsonObject().apply {
+                    addProperty("activities", activitiesString)
+                }
+                activities
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        } else {
+            null
+        }
+    }
+
+
 
     private fun setupObservers() {
         insightViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
@@ -205,14 +226,11 @@ class InsightFragment : Fragment() {
         }
     }
 
-    // Fungsi untuk mengambil emosi yang paling sering muncul per hari dalam 7 hari terakhir
     private fun getMostFrequentEmotionPerDayLast7Days() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
-                // Mengambil data emosi yang paling sering muncul per hari
                 val mostFrequentEmotions = insightViewModel.getMostFrequentEmotionPerDayLast7Days()
 
-                // Menampilkan hasil emosi yang paling sering muncul per hari
                 mostFrequentEmotions.forEach {
                     Log.d("MostFrequentEmotion", "Day: ${it.day}, Emotion: ${it.emotion}, Frequency: ${it.frequency}")
                 }
