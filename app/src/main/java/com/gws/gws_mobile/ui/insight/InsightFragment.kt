@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -73,11 +74,10 @@ class InsightFragment : Fragment() {
         if (activities != null) {
             insightViewModel.fetchRecommendationTag(activities)
         } else {
-            Log.e("InsightFragment", "Failed to read activities from JSON file")
+            Toast.makeText(context, "Failed to read activities", Toast.LENGTH_LONG).show()
         }
 
         setupMoodChart()
-        getMostFrequentEmotionPerDayLast7Days()
 
         return root
     }
@@ -150,7 +150,6 @@ class InsightFragment : Fragment() {
                     }
                 }
 
-                // Mengambil nilai emosi dan kategori untuk chart
                 val moodValues = mapOf(
                     "bliss" to 5f,
                     "bright" to 4f,
@@ -231,24 +230,7 @@ class InsightFragment : Fragment() {
                 lineChart.legend.isEnabled = false
 
             } catch (e: Exception) {
-                Log.e("InsightFragment", "Error setting up mood chart", e)
-            }
-        }
-    }
-
-    // Fungsi untuk mengambil emosi yang paling sering muncul per hari dalam 7 hari terakhir
-    private fun getMostFrequentEmotionPerDayLast7Days() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            try {
-                // Mengambil data emosi yang paling sering muncul per hari
-                val mostFrequentEmotions = insightViewModel.getMostFrequentEmotionPerDayLast7Days()
-
-                // Menampilkan hasil emosi yang paling sering muncul per hari
-                mostFrequentEmotions.forEach {
-                    Log.d("MostFrequentEmotion", "Day: ${it.day}, Emotion: ${it.emotion}, Frequency: ${it.frequency}")
-                }
-            } catch (e: Exception) {
-                Log.e("InsightFragment", "Error fetching most frequent emotions", e)
+                Toast.makeText(context, "Error setting up mood chart", Toast.LENGTH_LONG).show()
             }
         }
     }

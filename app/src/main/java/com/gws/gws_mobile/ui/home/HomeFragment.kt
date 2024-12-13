@@ -1,11 +1,9 @@
 package com.gws.gws_mobile.ui.home
 
 import android.annotation.SuppressLint
-import android.app.Application
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -83,6 +81,11 @@ class HomeFragment : Fragment() {
                 saveActivitiesToJsonFile(uniqueActivities)
             }
         })
+
+        binding.refreshButton.setOnClickListener {
+            showProgressIndicator()
+            homeViewModel.fetchMoodHistory()
+        }
 
         binding.recyclerViewMoodHistory.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewMoodHistory.adapter = moodHistoryAdapter

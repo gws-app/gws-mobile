@@ -12,6 +12,7 @@
         android:visibility="gone"
         android:indeterminate="true" />
 
+
     <ScrollView
         android:id="@+id/contentContainer"
         android:layout_width="match_parent"
@@ -132,14 +133,31 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <TextView
-                android:id="@+id/text_home"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="My Mood"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_margin="16dp" />
+                android:orientation="horizontal"
+                android:layout_margin="16dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/text_home"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="My Mood"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_weight="1" />
+
+                <ImageButton
+                    android:id="@+id/refresh_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_refresh"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Refresh"
+                    app:tint="@color/md_theme_tertiary_mediumContrast" />
+            </LinearLayout>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_quotes_include"

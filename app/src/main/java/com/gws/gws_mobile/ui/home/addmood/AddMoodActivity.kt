@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import android.media.MediaRecorder
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.ImageButton
 import android.widget.Toast
@@ -39,7 +38,6 @@ class AddMoodActivity : AppCompatActivity() {
 
         val moodName = intent.getStringExtra("moodName")
         moodName?.let {
-            Log.d("AddActivity", "Mood = $it")
             updateEmoji(it)
         }
 
@@ -168,10 +166,8 @@ class AddMoodActivity : AppCompatActivity() {
         val activitiesList = selectedActivities[category]?.toMutableList() ?: mutableListOf()
         if (activitiesList.contains(activity)) {
             activitiesList.remove(activity)
-            Log.d("ToogleSELEK", "HILANG")
         } else {
             activitiesList.add(activity)
-            Log.d("ToogleSELEK", "$activity")
         }
         selectedActivities[category] = activitiesList
     }
@@ -261,7 +257,6 @@ class AddMoodActivity : AppCompatActivity() {
             val file = File(it)
             if (file.exists()) {
                 file.delete()
-                Log.d("AddMoodActivity", "Previous audio file deleted: $it")
             }
         }
         audioFilePath = null

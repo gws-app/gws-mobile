@@ -42,7 +42,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                             val zonedDateTime = ZonedDateTime.parse(itMoodData.created_at, inputFormatter)
                             zonedDateTime.withZoneSameInstant(ZoneId.systemDefault()).format(outputFormatter)
                         } catch (e: Exception) {
-                            Log.e("FetchMoodHistory", "Error formatting date: ${e.message}")
                             itMoodData.created_at
                         }
 
@@ -64,11 +63,9 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                     }
                     _moodList.postValue(moodList)
                 } else {
-                    Log.e("LoginViewModel", "Error fetching mood history: ${response.status}")
                     _moodList.postValue(emptyList())
                 }
             } catch (e: Exception) {
-                Log.e("LoginViewModel", "Error fetching mood history: ${e.message}")
                 _moodList.postValue(emptyList())
             }
         }
@@ -98,10 +95,8 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
                 }
                 outputStream.close()
                 inputStream.close()
-                Log.d("DownloadVoiceNote", "Voice note downloaded to ${file.absolutePath}")
                 file.absolutePath
             } catch (e: Exception) {
-                Log.e("DownloadVoiceNote", "Failed to download voice note: ${e.message}")
                 ""
             }
         }
@@ -113,7 +108,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
             moodList.forEach { mood ->
                 moodDatabase.moodDataDao().insertMoodData(mood)
             }
-            Log.d("LoginViewModel", "Mood history saved to database")
         }
     }
 }

@@ -37,8 +37,7 @@ class InsightViewModel(application: Application) : AndroidViewModel(application)
             try {
                 val apiResponse = NewsApiConfig.provideNewsApiConfig().getNews()
                 _response.postValue(apiResponse)
-            } catch (e: Exception) {
-                Log.e("InsightViewModel", "Error fetching news: ${e.message}")
+            } catch (_: Exception) {
             } finally {
                 _isLoading.postValue(false)
             }
@@ -54,8 +53,7 @@ class InsightViewModel(application: Application) : AndroidViewModel(application)
             try {
                 val apiResponse = TagApiConfig.TagApiConfig().postRecommendations(activities)
                 _tags.postValue((apiResponse.recommendations ?: emptyList()) as List<String>?)
-            } catch (e: Exception) {
-                Log.e("InsightViewModel", "Error fetching recommendations: ${e.message}")
+            } catch (_: Exception) {
             } finally {
                 _isLoading.postValue(false)
             }
