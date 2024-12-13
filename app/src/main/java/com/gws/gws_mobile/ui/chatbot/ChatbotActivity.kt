@@ -3,7 +3,6 @@ package com.gws.gws_mobile.ui.chatbot
 import android.R
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -142,9 +141,12 @@ class ChatbotActivity : AppCompatActivity() {
     }
 
     private fun cleanUpSentence(sentence: String): List<String> {
-        val sentenceWords = sentence.split(" ").map { it.lowercase() }
+        // Remove all non-alphabetic characters using regex
+        val cleanedSentence = sentence.replace(Regex("[^A-Za-z\\s]"), "")
+        val sentenceWords = cleanedSentence.split(" ").map { it.lowercase() }
         return sentenceWords.map { lemmatizer.lemmatize(it) }
     }
+
 
     private fun bow(sentence: String): FloatArray {
         val sentenceWords = cleanUpSentence(sentence)
@@ -220,7 +222,6 @@ class ChatbotActivity : AppCompatActivity() {
             fileOutputStream.write(json.toByteArray())
             fileOutputStream.close()
         } catch (e: Exception) {
-            Log.e("ChatbotActivity", "Error saving chat history", e)
         }
     }
 
@@ -232,9 +233,7 @@ class ChatbotActivity : AppCompatActivity() {
             val history = gson.fromJson(json, Array<Message>::class.java).toMutableList()
             viewModel.restoreMessages(history)
         } catch (e: FileNotFoundException) {
-            Log.d("ChatbotActivity", "No previous chat history found")
         } catch (e: Exception) {
-            Log.e("ChatbotActivity", "Error loading chat history", e)
         }
     }
 
@@ -248,7 +247,6 @@ class ChatbotActivity : AppCompatActivity() {
         try {
             deleteFile("history_chat.json")
         } catch (e: Exception) {
-            Log.e("ChatbotActivity", "Error deleting chat history", e)
         }
     }
 

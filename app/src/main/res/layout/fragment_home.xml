@@ -1,22 +1,218 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.HomeFragment">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/text_home"
+    <ProgressBar
+        android:id="@+id/progressIndicator"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="4dp"
+        android:layout_gravity="top|center_horizontal"
+        android:visibility="gone"
+        android:indeterminate="true" />
+
+
+    <ScrollView
+        android:id="@+id/contentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="90dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_mood_include"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:strokeColor="?attr/colorPrimary">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/text_mood"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="How are you?"
+                        android:textSize="18sp"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:gravity="center"
+                        app:layout_constraintWidth_percent="1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <HorizontalScrollView
+                        android:id="@+id/emoji_scroll"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:scrollbars="none"
+                        android:gravity="center"
+                        app:layout_constraintTop_toBottomOf="@id/text_mood">
+
+                        <LinearLayout
+                            android:id="@+id/emoji_moods"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center"
+                            android:layout_gravity="center">
+
+                            <ImageButton
+                                android:id="@+id/emoji_button_1"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:layout_marginEnd="8dp"
+                                android:src="@drawable/ic_45_lupbgt"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="Mood 1" />
+
+                            <ImageButton
+                                android:id="@+id/emoji_button_2"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:layout_marginEnd="8dp"
+                                android:src="@drawable/ic_45_okegpp"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="Mood 2" />
+
+                            <ImageButton
+                                android:id="@+id/emoji_button_3"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:layout_marginEnd="8dp"
+                                android:src="@drawable/ic_45_smile"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="Mood 3" />
+
+                            <ImageButton
+                                android:id="@+id/emoji_button_4"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:layout_marginEnd="8dp"
+                                android:src="@drawable/ic_45_sad"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="Mood 4" />
+
+                            <ImageButton
+                                android:id="@+id/emoji_button_5"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:src="@drawable/ic_45_sadbed"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:contentDescription="Mood 5" />
+                        </LinearLayout>
+                    </HorizontalScrollView>
+
+                    <TextView
+                        android:id="@+id/text_date_mood"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:gravity="center"
+                        android:text="WED, DEC 24, 10:30 AM MST"
+                        android:textColor="?attr/colorOnSurfaceVariant"
+                        android:textSize="12sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/emoji_scroll"
+                        app:layout_constraintWidth_percent="1" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="16dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/text_home"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="My Mood"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_weight="1" />
+
+                <ImageButton
+                    android:id="@+id/refresh_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_refresh"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Refresh"
+                    app:tint="@color/md_theme_tertiary_mediumContrast" />
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_quotes_include"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="?attr/colorSurface"
+                app:strokeColor="?attr/colorPrimary">
+
+                <ImageView
+                    android:id="@+id/imageViewBackground"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:background="@android:color/black"
+                    android:alpha="0.6">
+
+                    <TextView
+                        android:id="@+id/textViewQuotes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Keep going, you're doing great!"
+                        android:textSize="16sp"
+                        android:textColor="#FFF"
+                        android:lineSpacingExtra="4dp"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:id="@+id/textViewAuthorQuote"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="- Unknown"
+                        android:textSize="14sp"
+                        android:textColor="#FFF"
+                        android:gravity="end"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewMoodHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"/>
+
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>

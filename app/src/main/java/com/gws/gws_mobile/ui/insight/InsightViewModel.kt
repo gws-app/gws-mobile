@@ -1,53 +1,43 @@
 package com.gws.gws_mobile.ui.insight
 
+import android.app.Application
 import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.gws.gws_mobile.api.ApiConfig
-import com.gws.gws_mobile.api.response.NewsRecomendationResponse
+import com.google.gson.JsonObject
+import com.gws.gws_mobile.api.config.NewsApiConfig
+import com.gws.gws_mobile.api.config.TagApiConfig
 import com.gws.gws_mobile.api.response.NewsResponse
-import com.gws.gws_mobile.api.response.RecommendationsResponse
+import com.gws.gws_mobile.database.mood.EmotionFrequency
+import com.gws.gws_mobile.database.mood.MoodDataDao
+import com.gws.gws_mobile.database.mood.MoodDatabase
 import kotlinx.coroutines.launch
 
-class InsightViewModel : ViewModel() {
+class InsightViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _response = MutableLiveData<NewsRecomendationResponse>()
-    val response: LiveData<NewsRecomendationResponse> = _response
+    private val _response = MutableLiveData<NewsResponse>()
+    val response: LiveData<NewsResponse> get() = _response
 
     private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: LiveData<Boolean> = _isLoading
+    val isLoading: LiveData<Boolean> get() = _isLoading
 
-    private val _newsResponse = MutableLiveData<NewsResponse>()
-    val newsResponse: LiveData<NewsResponse> get() = _newsResponse
+    private val _tags = MutableLiveData<List<String>>()
+    val tags: LiveData<List<String>> get() = _tags
 
-    private val _recommendationResponse = MutableLiveData<RecommendationsResponse>()
-    val recommendationResponse: LiveData<RecommendationsResponse> get() = _recommendationResponse
-
-    private var isDataFetched = false
+    private val moodDataDao: MoodDataDao = MoodDatabase.getDatabase(application).moodDataDao()
 
     /**
-     * Memanggil fetchData hanya jika data belum pernah diambil sebelumnya.
+     * Mengambil daftar berita dari API.
      */
-    fun fetchDataIfNeeded(requestBody: Map<String, Int?>) {
-        if (!isDataFetched) {
-            fetchData(requestBody)
-        }
-    }
-
-    /**
-     * Mengambil data dari API dan menyimpan hasilnya di LiveData.
-     */
-    private fun fetchData(requestBody: Map<String, Int?>) {
+    fun fetchNews() {
         viewModelScope.launch {
             _isLoading.postValue(true)
             try {
-                val apiResponse = ApiConfig.insightApiService().postInsight(requestBody)
+                val apiResponse = NewsApiConfig.provideNewsApiConfig().getNews()
                 _response.postValue(apiResponse)
-                isDataFetched = true
-            } catch (e: Exception) {
-                Log.e("InsightViewModel", "Error fetching data: ${e.message}")
+            } catch (_: Exception) {
             } finally {
                 _isLoading.postValue(false)
             }
@@ -55,30 +45,38 @@ class InsightViewModel : ViewModel() {
     }
 
     /**
-     * Mengambil detail berita berdasarkan ID.
+     * Mengambil rekomendasi berdasarkan data activities.
      */
-    fun fetchNewsById(id: Int) {
+    fun fetchRecommendationTag(activities: JsonObject) {
+        _isLoading.postValue(true)
         viewModelScope.launch {
             try {
-                val apiResponse = ApiConfig.insightApiService().getNews(id)
-                _newsResponse.postValue(apiResponse)
-            } catch (e: Exception) {
-                Log.e("InsightViewModel", "Error fetching news by ID: ${e.message}")
+                val apiResponse = TagApiConfig.TagApiConfig().postRecommendations(activities)
+                _tags.postValue((apiResponse.recommendations ?: emptyList()) as List<String>?)
+            } catch (_: Exception) {
+            } finally {
+                _isLoading.postValue(false)
             }
         }
     }
 
     /**
-     * Mengambil detail rekomendasi berdasarkan ID.
+     * Mengambil emosi yang paling sering muncul per hari selama 7 hari terakhir.
      */
-    fun fetchRecommendationById(id: Int) {
-        viewModelScope.launch {
-            try {
-                val apiResponse = ApiConfig.insightApiService().getRecommendations(id)
-                _recommendationResponse.postValue(apiResponse)
-            } catch (e: Exception) {
-                Log.e("InsightViewModel", "Error fetching recommendation by ID: ${e.message}")
+    suspend fun getMostFrequentEmotionPerDayLast7Days(): List<EmotionFrequency> {
+        val allEmotionData = moodDataDao.getEmotionFrequencyLast7Days()
+
+        val groupedByDay = allEmotionData.groupBy { it.day }
+
+        val mostFrequentEmotions = mutableListOf<EmotionFrequency>()
+
+        for ((day, emotions) in groupedByDay) {
+            val mostFrequentEmotion = emotions.maxByOrNull { it.frequency }
+            if (mostFrequentEmotion != null) {
+                mostFrequentEmotions.add(mostFrequentEmotion)
             }
         }
+
+        return mostFrequentEmotions.take(7)
     }
 }

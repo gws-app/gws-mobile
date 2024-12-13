@@ -8,13 +8,12 @@ class DetailViewModel : ViewModel() {
     private val _insightData = MutableLiveData<InsightData>()
     val insightData: LiveData<InsightData> get() = _insightData
 
-    fun setInsightData(title: String, description: String, image: String) {
-        _insightData.value = InsightData(title, description, image)
+    fun setInsightData(title: String, description: String) {
+        _insightData.value = InsightData(title, description)
     }
 }
 
 data class InsightData(
     val title: String,
-    val description: String,
-    val image: String
+    val description: String
 )

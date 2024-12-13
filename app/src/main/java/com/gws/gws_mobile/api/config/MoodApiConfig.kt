@@ -1,12 +1,14 @@
-package com.gws.gws_mobile.api
+package com.gws.gws_mobile.api.config
 
+import com.gws.gws_mobile.api.ApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object ApiConfig {
-    fun insightApiService(): ApiService {
+object MoodApiConfig {
+
+    fun createApiService(): ApiService {
         val loggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
         val client = OkHttpClient.Builder()
@@ -14,7 +16,7 @@ object ApiConfig {
             .build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl("https://2mail.site/")
+            .baseUrl("https://core-backend-345634152468.asia-southeast2.run.app/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()

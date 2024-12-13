@@ -44,4 +44,20 @@
 
     </com.google.android.material.card.MaterialCardView>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="8dp"
+        android:text="Logout"
+        android:textSize="16sp"
+        android:fontFamily="sans-serif-medium"
+        app:backgroundTint="@color/md_theme_primary"
+        app:cornerRadius="16dp"
+        app:icon="@drawable/ic_lock_outline_24"
+        app:iconGravity="textStart"
+        app:iconPadding="8dp"
+        android:contentDescription="Logout button" />
+
 </LinearLayout>

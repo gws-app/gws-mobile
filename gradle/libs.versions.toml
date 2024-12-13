@@ -16,6 +16,7 @@ activity = "1.9.3"
 tensorflowLiteSupport = "0.1.0"
 tensorflowLiteMetadata = "0.1.0"
 tensorflowLiteGpu = "2.3.0"
+annotation = "1.6.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -33,6 +34,7 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 tensorflow-lite-support = { group = "org.tensorflow", name = "tensorflow-lite-support", version.ref = "tensorflowLiteSupport" }
 tensorflow-lite-metadata = { group = "org.tensorflow", name = "tensorflow-lite-metadata", version.ref = "tensorflowLiteMetadata" }
 tensorflow-lite-gpu = { group = "org.tensorflow", name = "tensorflow-lite-gpu", version.ref = "tensorflowLiteGpu" }
+androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
