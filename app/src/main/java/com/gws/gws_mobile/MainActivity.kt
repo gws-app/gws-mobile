@@ -64,9 +64,8 @@ class MainActivity : AppCompatActivity() {
         val userId = SharedPreferences.getUserId(this)
 
         if (userId == null) {
-            Toast.makeText(this, "User is not logged in", Toast.LENGTH_SHORT).show()
             finish()
-            startActivity(Intent(this, LoginActivity::class.java))
+            startActivity(Intent(this, WelcomeActivity::class.java))
         }
     }
 }

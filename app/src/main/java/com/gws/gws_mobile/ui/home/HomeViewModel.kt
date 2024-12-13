@@ -1,7 +1,6 @@
 package com.gws.gws_mobile.ui.home
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -40,8 +39,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                         _quoteAuthor.value = quote.author ?: "Unknown author"
                     }
                 }
-            } catch (e: Exception) {
-                Log.e("HomeViewModel", "Error fetching quote: ${e.message}")
+            } catch (_: Exception) {
             }
         }
     }
@@ -51,9 +49,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             try {
                 val data = repository.getMoodHistoryFromDatabase()
                 _moodHistory.value = data
-                Log.d("HomeViewModel", "Fetched mood history from database: $data")
-            } catch (e: Exception) {
-                Log.e("HomeViewModel", "Error fetching mood history from database: ${e.message}")
+            } catch (_: Exception) {
             }
         }
     }
