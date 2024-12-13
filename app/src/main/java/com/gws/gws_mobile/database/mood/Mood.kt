@@ -9,6 +9,7 @@ import androidx.room.PrimaryKey
         val user_id: String,
         val emotion: String,
         val activities: String,
+        val additional_activities: String?,
         val note: String,
         val voice_note_url: String,
         val created_at: String

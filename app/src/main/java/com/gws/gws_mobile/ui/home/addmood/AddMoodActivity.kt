@@ -40,6 +40,7 @@ class AddMoodActivity : AppCompatActivity() {
         val moodName = intent.getStringExtra("moodName")
         moodName?.let {
             Log.d("AddActivity", "Mood = $it")
+            updateEmoji(it)
         }
 
         setupClickListeners()
@@ -51,6 +52,20 @@ class AddMoodActivity : AppCompatActivity() {
 
         addMoodViewModel.loading.observe(this, Observer { isLoading ->
         })
+    }
+
+    private fun updateEmoji(moodName: String) {
+
+        val emojiResId = when (moodName) {
+            "bliss" -> R.drawable.ic_45_lupbgt
+            "bright" -> R.drawable.ic_45_okegpp
+            "neutral" -> R.drawable.ic_45_smile
+            "low" -> R.drawable.ic_45_sad
+            "crumble" -> R.drawable.ic_45_sadbed
+            else -> R.drawable.ic_45_smile
+        }
+
+        binding.ivEmoji.setImageResource(emojiResId)
     }
 
     private fun setupClickListeners() {
@@ -67,6 +82,10 @@ class AddMoodActivity : AppCompatActivity() {
             binding.btnCollapseEntertainment to binding.llEntertainmentContent,
             binding.btnCollapseMindfulness to binding.llMindfulnessContent
         )
+
+        collapseButtons.forEach { (_, contentView) ->
+            contentView.visibility = View.GONE
+        }
 
         collapseButtons.forEach { (button, contentView) ->
             button.setOnClickListener { toggleCollapseExpand(contentView, button as ImageButton) }
@@ -163,10 +182,17 @@ class AddMoodActivity : AppCompatActivity() {
     }
 
     private fun saveMoodData() {
+
+        val allActivities = selectedActivities.toMutableMap()
+        if (binding.etAdditionalNote.text.isNotBlank()) {
+            val additionalActivity = listOf(binding.etAdditionalNote.text.toString())
+            allActivities["Additional Activities"] = additionalActivity
+        }
         val moodData = MoodData(
             userId = "",
             mood = intent.getStringExtra("moodName"),
-            activities = selectedActivities,
+            activities = allActivities,
+            additionalActivities = binding.etAdditionalNote.text.toString(),
             note = binding.etQuickNote.text.toString(),
             voiceNoteUrl = audioFilePath
         )
