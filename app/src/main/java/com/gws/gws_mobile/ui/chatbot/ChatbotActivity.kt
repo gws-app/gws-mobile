@@ -223,7 +223,6 @@ class ChatbotActivity : AppCompatActivity() {
             fileOutputStream.write(json.toByteArray())
             fileOutputStream.close()
         } catch (e: Exception) {
-            Log.e("ChatbotActivity", "Error saving chat history", e)
         }
     }
 
@@ -235,9 +234,7 @@ class ChatbotActivity : AppCompatActivity() {
             val history = gson.fromJson(json, Array<Message>::class.java).toMutableList()
             viewModel.restoreMessages(history)
         } catch (e: FileNotFoundException) {
-            Log.d("ChatbotActivity", "No previous chat history found")
         } catch (e: Exception) {
-            Log.e("ChatbotActivity", "Error loading chat history", e)
         }
     }
 
@@ -251,7 +248,6 @@ class ChatbotActivity : AppCompatActivity() {
         try {
             deleteFile("history_chat.json")
         } catch (e: Exception) {
-            Log.e("ChatbotActivity", "Error deleting chat history", e)
         }
     }
 

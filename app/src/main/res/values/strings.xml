@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">gws-mobile</string>
+    <string name="app_name">GWS</string>
     <string name="title_home">Home</string>
     <string name="title_insight">Insight</string>
     <string name="title_settings">Settings</string>
@@ -10,4 +10,13 @@
     <string name="notification_icon">Notification icon</string>
     <string name="search">Search</string>
     <string name="search_icon">Search icon</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
 </resources>
