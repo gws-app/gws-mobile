@@ -12,23 +12,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.gws.gws_mobile.databinding.ActivityChatbotBinding
-import com.gws.gws_mobile.ml.Model
 import jsastrawi.morphology.DefaultLemmatizer
 import jsastrawi.morphology.Lemmatizer
-import org.tensorflow.lite.DataType
-import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.InputStreamReader
+import kotlin.math.sqrt
 
 class ChatbotActivity : AppCompatActivity() {
 
     private lateinit var viewModel: ChatbotViewModel
     private lateinit var messageAdapter: MessageAdapter
-    private lateinit var model: Model
-    private lateinit var words: List<String>
-    private lateinit var classes: List<String>
-    private lateinit var trainingData: TrainingData
+    private lateinit var vocabulary: List<String>
+    private lateinit var intents: List<Intent>
     private lateinit var lemmatizer: Lemmatizer
 
     private lateinit var binding: ActivityChatbotBinding
@@ -36,6 +32,15 @@ class ChatbotActivity : AppCompatActivity() {
     private var detectedTag: String? = null
     private var currentPatterns: List<String>? = null
     private var isManualInput: Boolean = false
+
+    // Stopwords bahasa Indonesia
+    private val ignoreWords = setOf(
+        "", "!", "\"", "'", "(", ")", ",", "-", ".", ":", ";", "[", "]", "_", "?",
+        "adalah", "akan", "aku", "anda", "atau", "dalam", "dan", "dari", "dengan",
+        "di", "harus", "ini", "itu", "jika", "kami", "kamu", "ke", "kita", "mereka",
+        "oleh", "pada", "saya", "sebuah", "sedang", "sementara", "tanpa", "tapi",
+        "telah", "untuk", "yang", "{", "}", "merasa"
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,7 +74,6 @@ class ChatbotActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         saveChatHistory()
-        model.close()
     }
 
     private fun setupRecyclerView() {
@@ -90,7 +94,7 @@ class ChatbotActivity : AppCompatActivity() {
         if (inputText.isNotEmpty()) {
             isManualInput = true
             addMessageToViewModel(inputText, Message.SENDER_USER)
-            val response = classify(inputText)
+            val response = classifyWithCosineSimilarity(inputText)
             setupDropdown(response)
             binding.messageInput.text.clear()
         }
@@ -117,58 +121,125 @@ class ChatbotActivity : AppCompatActivity() {
     }
 
     private fun loadResources() {
-        loadModel()
-        loadTrainingData()
+        loadIntentsAndVocabulary()
         loadLemmatizer()
     }
 
-    private fun loadModel() {
-        model = Model.newInstance(this)
-    }
-
-    private fun loadTrainingData() {
-        val trainingDataPath = "training_data.json"
-        val reader = InputStreamReader(assets.open(trainingDataPath))
+    private fun loadIntentsAndVocabulary() {
+        val dataset = "nlp_dataset_faq.json"
+        val reader = InputStreamReader(assets.open(dataset))
         val gson = Gson()
-        trainingData = gson.fromJson(reader, TrainingData::class.java)
-        words = trainingData.words
-        classes = trainingData.classes
+
+        val jsonArray = gson.fromJson(reader, Array<JsonObject>::class.java)
+
+        // Load intents
+        intents = jsonArray.map { jsonObject ->
+            val tag = jsonObject.get("tag").asString
+            val patterns = jsonObject.getAsJsonArray("patterns").map { it.asString }
+            val responses = jsonObject.getAsJsonArray("responses").map { it.asString }
+            Intent(tag, patterns, responses)
+        }
+
+        // Build vocabulary from all patterns
+        val allWords = mutableSetOf<String>()
+        intents.forEach { intent ->
+            intent.patterns.forEach { pattern ->
+                val words = tokenize(pattern)
+                allWords.addAll(words)
+            }
+        }
+        vocabulary = allWords.sorted()
     }
 
     private fun loadLemmatizer() {
-        val dictionary = HashSet(words)
+        val dictionary = HashSet(vocabulary)
         lemmatizer = DefaultLemmatizer(dictionary)
     }
 
-    private fun cleanUpSentence(sentence: String): List<String> {
-        // Remove all non-alphabetic characters using regex
-        val cleanedSentence = sentence.replace(Regex("[^A-Za-z\\s]"), "")
-        val sentenceWords = cleanedSentence.split(" ").map { it.lowercase() }
-        return sentenceWords.map { lemmatizer.lemmatize(it) }
+    // Simple Indonesian stemming
+    private fun stemWord(word: String): String {
+        var stemmed = word.lowercase()
+
+        // Remove prefixes
+        val prefixes = listOf("me", "di", "ke", "pe", "ter", "ber", "se")
+        for (prefix in prefixes) {
+            if (stemmed.startsWith(prefix) && stemmed.length > prefix.length + 2) {
+                stemmed = stemmed.substring(prefix.length)
+                break
+            }
+        }
+
+        // Remove suffixes
+        val suffixes = listOf("kan", "an", "i", "nya")
+        for (suffix in suffixes) {
+            if (stemmed.endsWith(suffix) && stemmed.length > suffix.length + 2) {
+                stemmed = stemmed.substring(0, stemmed.length - suffix.length)
+                break
+            }
+        }
+
+        return stemmed
     }
 
+    private fun tokenize(sentence: String): List<String> {
+        // Remove punctuation and convert to lowercase
+        val cleaned = sentence.replace(Regex("[^\\w\\s]"), " ")
 
-    private fun bow(sentence: String): FloatArray {
-        val sentenceWords = cleanUpSentence(sentence)
-        return FloatArray(words.size) { if (sentenceWords.contains(words[it])) 1f else 0f }
+        // Split and filter
+        return cleaned.split(Regex("\\s+"))
+            .map { it.lowercase() }
+            .filter { it.isNotEmpty() && !ignoreWords.contains(it) }
+            .map { stemWord(it) }
     }
 
-    private fun classify(sentence: String): String {
-        val inputData = bow(sentence)
+    private fun createBagOfWords(sentence: String): FloatArray {
+        val sentenceWords = tokenize(sentence)
+        return FloatArray(vocabulary.size) { index ->
+            if (sentenceWords.contains(vocabulary[index])) 1f else 0f
+        }
+    }
 
-        val inputFeature0 = TensorBuffer.createFixedSize(intArrayOf(1, words.size), DataType.FLOAT32)
-        inputFeature0.loadArray(inputData)
+    private fun cosineSimilarity(vec1: FloatArray, vec2: FloatArray): Float {
+        var dotProduct = 0f
+        var mag1 = 0f
+        var mag2 = 0f
 
-        val outputs = model.process(inputFeature0)
-        val outputFeature0 = outputs.outputFeature0AsTensorBuffer
+        for (i in vec1.indices) {
+            dotProduct += vec1[i] * vec2[i]
+            mag1 += vec1[i] * vec1[i]
+            mag2 += vec2[i] * vec2[i]
+        }
 
-        val results = outputFeature0.floatArray.mapIndexed { index, confidence ->
-            index to confidence
-        }.filter { it.second >= 0.40f }
-            .sortedByDescending { it.second }
+        mag1 = sqrt(mag1)
+        mag2 = sqrt(mag2)
 
-        return if (results.isNotEmpty()) {
-            detectedTag = classes[results[0].first]
+        return if (mag1 == 0f || mag2 == 0f) 0f else dotProduct / (mag1 * mag2)
+    }
+
+    private fun classifyWithCosineSimilarity(sentence: String): String {
+        val inputBag = createBagOfWords(sentence)
+        val scores = mutableListOf<Pair<String, Float>>()
+
+        intents.forEach { intent ->
+            var maxScore = 0f
+
+            intent.patterns.forEach { pattern ->
+                val patternBag = createBagOfWords(pattern)
+                val similarity = cosineSimilarity(inputBag, patternBag)
+                if (similarity > maxScore) {
+                    maxScore = similarity
+                }
+            }
+
+            if (maxScore > 0.3f) { // Threshold
+                scores.add(Pair(intent.tag, maxScore))
+            }
+        }
+
+        scores.sortByDescending { it.second }
+
+        return if (scores.isNotEmpty()) {
+            detectedTag = scores[0].first
             detectedTag ?: "unknown"
         } else {
             "unknown"
@@ -176,16 +247,10 @@ class ChatbotActivity : AppCompatActivity() {
     }
 
     private fun setupDropdown(tag: String) {
-        val dataset = "nlp_dataset_faq.json"
-        val reader = InputStreamReader(assets.open(dataset))
-        val gson = Gson()
-
-        val jsonArray = gson.fromJson(reader, Array<JsonObject>::class.java)
-        val match = jsonArray.find { it.get("tag").asString == tag }
+        val match = intents.find { it.tag == tag }
 
         if (match != null) {
-            val patterns = match.getAsJsonArray("patterns")
-            currentPatterns = patterns.map { it.asString }
+            currentPatterns = match.patterns
 
             val adapter = ArrayAdapter(this, R.layout.simple_spinner_item, currentPatterns!!)
             adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
@@ -198,16 +263,10 @@ class ChatbotActivity : AppCompatActivity() {
     }
 
     private fun getResponseForPattern(): String {
-        val dataset = "nlp_dataset_faq.json"
-        val reader = InputStreamReader(assets.open(dataset))
-        val gson = Gson()
-
-        val jsonArray = gson.fromJson(reader, Array<JsonObject>::class.java)
-        val match = jsonArray.find { it.get("tag").asString == detectedTag }
+        val match = intents.find { it.tag == detectedTag }
 
         return if (match != null) {
-            val responses = match.getAsJsonArray("responses")
-            responses.map { it.asString }.random()
+            match.responses.random()
         } else {
             "Sorry, I don't have an answer for that."
         }
@@ -222,6 +281,7 @@ class ChatbotActivity : AppCompatActivity() {
             fileOutputStream.write(json.toByteArray())
             fileOutputStream.close()
         } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -233,7 +293,9 @@ class ChatbotActivity : AppCompatActivity() {
             val history = gson.fromJson(json, Array<Message>::class.java).toMutableList()
             viewModel.restoreMessages(history)
         } catch (e: FileNotFoundException) {
+            // File doesn't exist yet, that's okay
         } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -247,13 +309,14 @@ class ChatbotActivity : AppCompatActivity() {
         try {
             deleteFile("history_chat.json")
         } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
-    data class TrainingData(
-        val words: List<String>,
-        val classes: List<String>,
-        val train_x: List<List<Float>>,
-        val train_y: List<List<Float>>
+    // Data class untuk Intent
+    data class Intent(
+        val tag: String,
+        val patterns: List<String>,
+        val responses: List<String>
     )
 }
